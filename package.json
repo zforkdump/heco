@@ -1,0 +1,31 @@
+{
+    "name": "heco",
+    "description": "Hadoop Ecosystem",
+    "version": "0.0.1",
+    "author": "David Worms",
+    "contributors": [ 
+        { "name": "David Worms", "email": "david@adaltas.com" }
+    ],
+    "dependencies": {
+        "coffee-script": "latest",
+        "shell": "latest",
+        "heco-core": "latest",
+        "heco-hadoop": "latest",
+        "heco-hbase": "latest",
+        "heco-hive": "latest",
+        "heco-pig": "latest",
+        "heco-oozie": "latest",
+        "heco-hue": "latest",
+        "heco-zookeeper": "latest",
+        "heco-thrift": "latest"
+    },
+    "devDependencies": {
+        "expresso": "latest"
+    },
+    "keywords": [],
+    "main": "index",
+    "bin": { "heco": "./bin/heco" },
+    "engines": { "node": ">= 0.4.7" }
+}
+
+	

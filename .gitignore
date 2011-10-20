@@ -1,0 +1,4 @@
+.*
+!.gitignore
+/local
+/node_modules

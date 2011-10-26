@@ -49,16 +49,30 @@ module.exports = (req, res, next) ->
         #routes.sqoop.configure
         shell.routes.prompt
     ]
+    app.cmd 'restart', 'Restart all Hadoop components', [
+        zookeeper.recipes.stop
+        hadoop.recipes.stop
+        hbase.recipes.stop
+        hive.recipes.stop
+        hue.recipes.stop
+        zookeeper.recipes.start
+        hadoop.recipes.start
+        hbase.recipes.start
+        hive.recipes.start
+        hue.recipes.start
+    ], shell.routes.prompt
     app.cmd 'start', 'Start all Hadoop components', [
         zookeeper.recipes.start
         hadoop.recipes.start
         hbase.recipes.start
+        hive.recipes.start
         hue.recipes.start
     ], shell.routes.prompt
     app.cmd 'stop', 'Stop all Hadoop components', [
         zookeeper.recipes.stop
         hadoop.recipes.stop
         hbase.recipes.stop
+        hive.recipes.stop
         hue.recipes.stop
         shell.routes.prompt
     ]

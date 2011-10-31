@@ -2,8 +2,7 @@
 
 shell = require 'shell'
 
-process.chdir __dirname + "/../"
-app = module.exports = shell()
+app = module.exports = shell chdir: true
 app.configure ->
     app.use shell.history shell: app
     app.use shell.completer shell: app
@@ -17,11 +16,8 @@ app.configure ->
     app.use require 'heco-hue/lib/plugin'
     app.use require 'heco-zookeeper/lib/plugin'
     app.use require 'heco-thrift/lib/plugin'
+    app.use shell.cloud9 port: 4601
     app.use shell.router shell: app
-    app.use shell.cloud9
-        shell: app
-        ip: '127.0.0.1'
-        port: '4601'
     app.use shell.help
         shell: app
         introduction: true

@@ -19,9 +19,6 @@
         "heco-zookeeper": "latest",
         "heco-thrift": "latest"
     },
-    "devDependencies": {
-        "expresso": "latest"
-    },
     "keywords": [],
     "main": "index",
     "bin": { "heco": "./bin/heco" },

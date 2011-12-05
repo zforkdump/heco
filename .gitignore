@@ -1,4 +1,10 @@
 .*
 !.gitignore
-/local
+# npm doesnt like `/local` nor `local`
+# to debug, open `./lib/utils/tar.js`, l170 in `makeList_`
+# files = files.filter(function (f) {
+#   console.log(dir,f,excludes.filter(dir, exList)(f) || f.slice(-1) === "/");
+#   return excludes.filter(dir, exList)(f) || f.slice(-1) === "/"
+# })
+local/
 /node_modules

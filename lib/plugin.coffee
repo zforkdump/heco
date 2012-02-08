@@ -10,6 +10,7 @@ oozie = require 'heco-oozie'
 hue = require 'heco-hue'
 zookeeper = require 'heco-zookeeper'
 thrift = require 'heco-thrift'
+#flume = require 'heco-flume'
 
 module.exports = (req, res, next) ->
     app = req.shell
@@ -69,11 +70,11 @@ module.exports = (req, res, next) ->
         hue.recipes.start
     ], shell.routes.prompt
     app.cmd 'stop', 'Stop all Hadoop components', [
-        zookeeper.recipes.stop
-        hadoop.recipes.stop
-        hbase.recipes.stop
-        hive.recipes.stop
         hue.recipes.stop
+        hive.recipes.stop
+        hbase.recipes.stop
+        hadoop.recipes.stop
+        zookeeper.recipes.stop
         shell.routes.prompt
     ]
     next()

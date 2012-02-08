@@ -17,7 +17,8 @@
         "heco-oozie": "latest",
         "heco-hue": "latest",
         "heco-zookeeper": "latest",
-        "heco-thrift": "latest"
+        "heco-thrift": "latest",
+        "heco-flume": "latest"
     },
     "keywords": [],
     "main": "index",

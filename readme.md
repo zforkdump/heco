@@ -16,6 +16,8 @@ heco help
 heco install
 ```
 
+On OSX, I didn't encounter any particular issue, but maybe was it because I already had all the dependencies.
+
 On a fresh Ubuntu 11.04 installation, you will need to prepare the system as follow.
 
 ```bash

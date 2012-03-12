@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+    <property>
+		<name>mapred.local.dir</name>
+		<value><%= @['mapred.local.dir'] %></value>
+	</property>
+	<property>
+		<name>mapred.system.dir</name>
+		<value><%= @['mapred.system.dir'] %></value>
+	</property>
+	<property>
+		<name>mapred.job.tracker</name>
+		<value><%= @['mapred.job.tracker'] %></value>
+	</property>
+    <property>
+        <name>mapred.job.tracker.handler.count</name>
+        <value><%= @['mapred.job.tracker.handler.count'] %></value>
+    </property>
+	<property>
+		<name>mapred.tasktracker.map.tasks.maximum</name>
+		<value><%= @['mapred.tasktracker.map.tasks.maximum'] %></value>
+		<final>true</final>
+	</property>
+	<property>
+		<name>mapred.tasktracker.reduce.tasks.maximum</name>
+		<value><%= @['mapred.tasktracker.reduce.tasks.maximum'] %></value>
+		<final>true</final>
+	</property>
+	<property>
+		<name>mapred.reduce.parallel.copies</name>
+		<value><%= @['mapred.reduce.parallel.copies'] %></value>
+	</property>
+	<property>
+		<name>mapred.map.child.java.opts</name>
+		<value><%= @['mapred.map.child.java.opts'] %></value>
+	</property>
+	<property>
+		<name>mapred.reduce.child.java.opts</name>
+		<value><%= @['mapred.reduce.child.java.opts'] %></value>
+	</property>
+	<property>
+		<name>fs.inmemory.size.mb</name>
+		<value><%= @['fs.inmemory.size.mb'] %></value>
+	</property>
+	<property>
+		<name>io.sort.factor</name>
+		<value><%= @['io.sort.factor'] %></value>
+	</property>
+	<property>
+		<name>io.sort.mb</name>
+		<value><%= @['io.sort.mb'] %></value>
+	</property>
+	<property>
+		<name>io.file.buffer.size</name>
+		<value><%= @['io.file.buffer.size'] %></value>
+	</property>
+	<property>
+		<name>mapred.task.tracker.task-controller</name>
+		<value><%= @['mapred.task.tracker.task-controller'] %></value>
+	</property>
+	<property>
+		<name>mapred.tasktracker.dns.interface</name>
+		<value><%= @['mapred.tasktracker.dns.interface'] %></value>
+	</property>
+	<property>
+		<name>mapred.tasktracker.dns.nameserver</name>
+		<value><%= @['mapred.tasktracker.dns.nameserver'] %></value>
+	</property>
+	<!-- Hue -->
+	<property>
+		<name>jobtracker.thrift.address</name>
+		<value><%= @['jobtracker.thrift.address'] %></value>
+	</property>
+	<property>
+		<name>mapred.jobtracker.plugins</name>
+		<value><%= @['mapred.jobtracker.plugins'] %></value>
+	</property>
+</configuration>

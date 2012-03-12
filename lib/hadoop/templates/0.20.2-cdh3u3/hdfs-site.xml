@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+<property>
+  <name>dfs.secondary.http.address</name>
+  <value><%= @['dfs.secondary.http.address'] %></value>
+  <description>
+    The secondary namenode http server address and port.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+<property>
+  <name>dfs.name.dir</name>
+  <value><%= @['dfs.name.dir'].join(',') %></value>
+</property>
+<property>
+  <name>dfs.data.dir</name>
+  <value><%= @['dfs.data.dir'].join(',') %></value>
+</property>
+<property>
+  <name>dfs.block.size</name>
+  <value><%= @['dfs.block.size'] %></value>
+</property>
+<property>
+  <name>dfs.namenode.handler.count</name>
+  <value><%= @['dfs.namenode.handler.count'] %></value>
+</property>
+<property>
+  <name>dfs.http.address</name>
+  <value><%= @['dfs.http.address'] %></value>
+</property>
+<property>
+  <name>dfs.datanode.max.xcievers</name>
+  <value><%= @['dfs.datanode.max.xcievers'] %></value>
+</property>
+<property>
+  <name>dfs.replication</name>
+  <value><%= @['dfs.replication'] %></value>
+</property>
+<!-- Hue -->
+<property>
+  <name>dfs.namenode.plugins</name>
+  <value><%= @['dfs.namenode.plugins'] %></value>
+</property>
+<property>
+  <name>dfs.datanode.plugins</name>
+  <value><%= @['dfs.datanode.plugins'] %></value>
+</property>
+<property>
+  <name>dfs.thrift.address</name>
+  <value><%= @['dfs.thrift.address'] %></value>
+</property>
+
+</configuration>

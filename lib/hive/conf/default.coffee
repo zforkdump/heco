@@ -1,0 +1,20 @@
+
+module.exports = hive:
+    version: '0.7.1-cdh3u3'
+    attributes: 
+        'hive.exec.scratchdir': './tmp/hive-${user.name}'
+        'hive.metastore.warehouse.dir': '/user/hive/warehouse'
+        'database_engine': 'mysql'
+        #'database_driver': './mysql-connector-java-5.1.13-bin.jar'
+        'database_driver': 'com.mysql.jdbc.Driver'
+        'database_driver_url': 'http://www.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.15.tar.gz/from/http://mysql.he.net/'
+        'database_host': 'localhost'
+        'database_port': '3306'
+        'database_username': 'root'
+        'database_password': ''
+        'database_name': 'hive'
+        'database_create': 'true'
+        'stats_database_name': 'hive_stats'
+        'stats_database_create': 'true'
+        'hive.log.dir': './hive-${user.name}'
+        'hive.log.direxec': './hive-exec-${user.name}'

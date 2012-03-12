@@ -9,6 +9,9 @@
     "dependencies": {
         "coffee-script": "latest",
         "shell": "latest",
+        "mecano": "latest",
+        "glob": "latest",
+        "dom-js": "latest",
         "heco-core": "latest",
         "heco-hadoop": "latest",
         "heco-hbase": "latest",

@@ -1,6 +1,7 @@
 
 path = require 'path'
 shell = require 'shell'
+mecano = require 'mecano'
 core = require 'heco-core'
 hadoop = require 'heco-hadoop'
 hbase = require 'heco-hbase'
@@ -14,6 +15,7 @@ thrift = require 'heco-thrift'
 
 module.exports = (req, res, next) ->
     app = req.shell
+    # Register commands
     app.cmd 'install', 'Install all the Hadoop components', [
         core.recipes.layout
         zookeeper.recipes.install
@@ -77,4 +79,6 @@ module.exports = (req, res, next) ->
         zookeeper.recipes.stop
         shell.routes.prompt
     ]
+    # Enrich with user defined configuration
+    mecano.merge true, req.hmgr.config, require "#{__dirname}/../config"
     next()

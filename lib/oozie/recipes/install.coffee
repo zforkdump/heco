@@ -1,27 +1,21 @@
 
 path = require 'path'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports =
-    download: (req, res, next) ->
-        res.blue "Oozie # Install # Download: "
-        c = req.hmgr.config
+    download: recipe.wrap( 'Oozie # Install # Download', (c, next) ->
         mecano.download
-            source: c.oozie.source
-            destination: "#{c.core.tmp}/#{path.basename c.oozie.source}"
-            force: false
+            source: c.conf.oozie.source
+            destination: "#{c.conf.core.tmp}/#{path.basename c.conf.oozie.source}"
         , (err, downloaded) ->
-            return res.red('FAILED').ln() && next err if err
-            res.cyan(if downloaded then 'OK' else 'CACHE').ln()
-            next()
-    extract: (req, res, next) ->
-        res.blue 'Oozie # Install # Extract: '
-        c = req.hmgr.config
+            next err, if downloaded then recipe.OK else recipe.SKIPPED
+    )
+    extract: recipe.wrap( 'Oozie # Install # Extract', (c, next) ->
         mecano.extract
-            source: "#{c.core.tmp}/#{path.basename c.oozie.source}"
-            destination: c.core.lib
-            not_if_exists: "#{c.core.lib}/#{path.basename c.oozie.source, '.tar.gz'}"
+            source: "#{c.conf.core.tmp}/#{path.basename c.conf.oozie.source}"
+            destination: c.conf.core.lib
+            not_if_exists: "#{c.conf.core.lib}/#{path.basename c.conf.oozie.source, '.tar.gz'}"
         , (err, extracted) ->
-            return res.red('FAILED').ln() && next err if err
-            res.cyan(if extracted then 'OK' else 'CACHE').ln()
-            next()
+            next err, if extracted then recipe.OK else recipe.SKIPPED
+    )

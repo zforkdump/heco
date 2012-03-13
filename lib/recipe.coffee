@@ -12,6 +12,8 @@ recipe = module.exports =
     DISABLED_MSG: 'DISABLED'
     TODO: 4
     TODO_MSG: 'TODO'
+    PARTIAL: 5
+    PARTIAL_MSG: 'PARTIAL'
     wrap: (options, route) ->
         assert.ok options, 'Missing argument `options`'
         assert.ok route, 'Missing argument `route`'
@@ -25,6 +27,7 @@ recipe = module.exports =
                     when recipe.SKIPPED then res.cyan recipe.SKIPPED_MSG
                     when recipe.FAILED then res.magenta recipe.FAILED_MSG
                     when recipe.TODO then res.cyan recipe.TODO_MSG
+                    when recipe.PARTIAL then res.cyan recipe.PARTIAL_MSG
                     else res.cyan code
                 res.ln()
                 next()

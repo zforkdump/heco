@@ -1,15 +1,16 @@
 
-exec = require('child_process').exec
+mecano = require 'mecano'
+recipe = require '../../recipe'
 
-module.exports = (req, res, next) ->
-    res.blue 'ZooKeeper # Stop: '
-    c = req.hmgr.config
-    cmd = "#{c.core.bin}/zkServer.sh stop"
-    exec cmd, (err, stdout, stderr) ->
-        if /could not find file/.test stdout
-            message = 'SKIPPED'
-        else if /STOPPED/.test stdout
-            message = 'OK'
-        else return res.red('FAILED').ln() && next err
-        res.cyan(message).ln()
-        next()
+module.exports = recipe.wrap( 'ZooKeeper # Stop', (c, next) ->
+    mecano.exec
+        cmd: 'zkServer.sh stop'
+        cwd: c.conf.core.bin
+    , (err, executed, stdout, stderr) ->
+        if /STOPPED/.test stdout
+            code = recipe.OK
+        else if /could not find file/.test stdout
+            code = recipe.SKIPPED
+        else code = recipe.FAILED
+        next err, code
+)

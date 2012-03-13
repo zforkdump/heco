@@ -4,77 +4,62 @@ path = require 'path'
 exec = require('child_process').exec
 mecano = require 'mecano'
 mysql = require 'mysql'
+recipe = require '../../recipe'
 
 module.exports = 
-    attributes: (req, res, next) ->
-        res.blue 'Hue # Configuration # Attributes: '
-        c = req.hmgr.config
-        #questions = c.hue.attributes
-        #req.question questions, (attrs) ->
-        attrs = c.hue.attributes
-        attrs['hadoop.hadoop_home'] = c.hadoop.prefix
-        attrs['hadoop.hdfs_clusters.hdfs_port'] = c.hadoop.attributes['fs.default.name'].split(':')[2]
-        attrs['hadoop.hdfs_clusters.http_port'] = c.hadoop.attributes['dfs.http.address'].split(':')[1]
-        attrs['hdfs.thrift_port'] = c.hadoop.attributes['dfs.thrift.address'].split(':')[1]
-        attrs['mapred.thrift_port'] = c.hadoop.attributes['jobtracker.thrift.address'].split(':')[1]
-        attrs['hive_home_dir'] = c.hive.prefix
-        attrs['hive_conf_dir'] = c.hive.conf
+    attributes: recipe.wrap( 'Hue # Configuration # Attributes', (c, next) ->
+        attrs = c.conf.hue.attributes
+        attrs['hadoop.hadoop_home'] = c.conf.hadoop.prefix
+        attrs['hadoop.hdfs_clusters.hdfs_port'] = c.conf.hadoop.attributes['fs.default.name'].split(':')[2]
+        attrs['hadoop.hdfs_clusters.http_port'] = c.conf.hadoop.attributes['dfs.http.address'].split(':')[1]
+        attrs['hdfs.thrift_port'] = c.conf.hadoop.attributes['dfs.thrift.address'].split(':')[1]
+        attrs['mapred.thrift_port'] = c.conf.hadoop.attributes['jobtracker.thrift.address'].split(':')[1]
+        attrs['hive_home_dir'] = c.conf.hive.prefix
+        attrs['hive_conf_dir'] = c.conf.hive.conf
         mecano.render [
-            source: "#{__dirname}/../templates/#{c.hue.version}/hue.ini"
-            destination: "#{c.hue.prefix}/desktop/conf/hue.ini"
+            source: "#{__dirname}/../templates/#{c.conf.hue.version}/hue.ini"
+            destination: "#{c.conf.hue.prefix}/desktop/conf/hue.ini"
             context: attrs
         ,
-            source: "#{__dirname}/../templates/#{c.hue.version}/hue-beeswax.ini"
-            destination: "#{c.hue.prefix}/apps/beeswax/conf/hue-beeswax.ini"
+            source: "#{__dirname}/../templates/#{c.conf.hue.version}/hue-beeswax.ini"
+            destination: "#{c.conf.hue.prefix}/apps/beeswax/conf/hue-beeswax.ini"
             context: attrs
         ], (err, updated) ->
-            return res.red('FAILED').ln() && next err if err
-            res.cyan(if updated then 'OK' else 'SKIPPED').ln()
-            next()
-    dirs: (req, res, next) ->
-        res.blue 'Hue # Configuration # Directories: '
-        c = req.hmgr.config
+            next err, if updated then recipe.OK else recipe.SKIPPED
+    )
+    dirs: recipe.wrap( 'Hue # Configuration # Directories', (c, next) ->
         mecano.mkdir [
-            directory: c.hue.pid
+            directory: c.conf.hue.pid
             chmod: 0755
         ], (err, created) ->
-            return res.cyan('FAILED').ln() && next err if err
-            res.cyan(if created then 'OK' else 'SKIPPED').ln()
-            next()
-    database: (req, res, next) ->
-        res.blue 'Hue # Configure # Database: '
-        c = req.hmgr.config
-        attrs = c.hue.attributes
+            next err, if created then recipe.OK else recipe.SKIPPED
+    )
+    database: recipe.wrap( 'Hue # Configure # Database', (c, next) ->
+        attrs = c.conf.hue.attributes
         client_end = (callback) ->
             client.end (err) ->
-                return res.red('FAILED').ln() && next err if err
-                callback()
+                callback err
         client = mysql.createClient
             host: attrs.database_host
             user: attrs.database_user
             password: attrs.database_password
         client.query 'SHOW DATABASES;', (err, databases) ->
+            return next err if err
             if (databases.filter (database) -> database.Database is 'hue').length
                 return client_end ->
-                    res.cyan('SKIPPED').ln() && next()
+                    next null, recipe.SKIPPED
             client.query 'CREATE DATABASE `hue`;', (err, result) ->
                 client_end ->
-                    return res.red('FAILED').ln() && next err if err
-                    res.cyan('OK').ln()
-                    next()
+                    next err, recipe.OK
+    )
     # TODO: Build only if configuration has changed to reflect changes in database settings
-    build: (req, res, next) ->
-        res.blue 'Hue # Configure # Build: '
-        c = req.hmgr.config
-        return res.cyan('CACHE').ln() && next() if c.hue.extracted is 'CACHE'
-        cmd = exec "cd #{c.hue.prefix} && make apps" #, cwd: c.hue.prefix
-        cmd.stdout.on 'data', (data) ->
-            #res.blue data
-        cmd.stderr.on 'data', (data) ->
-            #res.magenta data
-        cmd.on 'exit', (code) ->
-            # Full build return a code equals to null, strange
-            return res.red('FAILED').ln() && next new Error "Failed to build Hue with code #{code}" unless code is null or code is 0
-            res.cyan('OK').ln()
-            next()
+    # Among the created file: './app.reg'
+    build: recipe.wrap( 'Hue # Configure # Build', (c, next) ->
+        mecano.exec
+            cmd: 'make apps'
+            cwd: c.conf.hue.prefix
+            not_if_exists: "#{c.conf.hue.prefix}/app.reg"
+        , (err, executed, stdout, stderr) ->
+            next err, if executed then recipe.OK else recipe.SKIPPED
+    )
                 

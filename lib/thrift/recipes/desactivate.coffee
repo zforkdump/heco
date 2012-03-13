@@ -1,15 +1,13 @@
 
-glob = require('glob').glob
+glob = require 'glob'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports = 
-    bin: (req, res, next) ->
-        res.blue 'Thrift # Desactivation # Bin: '
-        c = req.hmgr.config
-        glob "#{c.thrift.bin}/*", (err, files) ->
+    bin: recipe.wrap( 'Thrift # Desactivation # Bin', (c, next) ->
+        glob "#{c.conf.thrift.bin}/*", (err, files) ->
             files = for file, i in files
-                "#{c.core.bin}/#{path.basename file}"
+                "#{c.conf.core.bin}/#{path.basename file}"
             mecano.rm files, (err, deleted) ->
-                return res.red('FAILED').ln() && next err if err
-                res.cyan(if deleted then 'OK' else 'SKIPPED').ln()
-                next()
+                next err, if deleted then recipe.OK else recipe.SKIPPED
+    )

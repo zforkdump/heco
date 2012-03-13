@@ -1,6 +1,7 @@
 
 path = require 'path'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports =
     download: (req, res, next) ->

@@ -1,30 +1,22 @@
 
 path = require 'path'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports =
-    download: (req, res, next) ->
-        res.blue 'Hue # Install # Download: '
-        c = req.hmgr.config
+    download: recipe.wrap( 'Hue # Install # Download', (c, next) ->
         mecano.download
-            source: c.hue.source
-            destination: "#{c.core.tmp}/#{path.basename c.hue.source}"
+            source: c.conf.hue.source
+            destination: "#{c.conf.core.tmp}/#{path.basename c.conf.hue.source}"
             force: false
         , (err, downloaded) ->
-            return next err if err
-            message = if downloaded then 'OK' else 'CACHE'
-            res.cyan(message).ln()
-            next()
-    extract: (req, res, next) ->
-        res.blue 'Hue # Install # Extract: '
-        c = req.hmgr.config
+            next err, if downloaded then recipe.OK else recipe.CACHE
+    )
+    extract: recipe.wrap( 'Hue # Install # Extract', (c, next) ->
         mecano.extract
-            source: "#{c.core.tmp}/#{path.basename c.hue.source}"
-            destination: c.core.lib
-            not_if_exists: "#{c.core.lib}/#{path.basename c.hue.source, '.tar.gz'}"
+            source: "#{c.conf.core.tmp}/#{path.basename c.conf.hue.source}"
+            destination: c.conf.core.lib
+            not_if_exists: "#{c.conf.core.lib}/#{path.basename c.conf.hue.source, '.tar.gz'}"
         , (err, extracted) ->
-            return next err if err
-            message = if extracted then 'OK' else 'CACHE'
-            c.hue.extracted = message
-            res.cyan(message).ln()
-            next()
+            next err, if extracted then recipe.OK else recipe.CACHE
+    )

@@ -1,29 +1,25 @@
 
 path = require 'path'
 fs = require 'fs'
+mysql = require 'mysql'
 exec = require('child_process').exec
 mecano = require 'mecano'
+recipe = require '../../recipe'
 properties = require '../../hadoop/lib/properties'
-mysql = require 'mysql'
 
 module.exports = 
-    check: (req, res, next) ->
-        res.blue 'Hive # Configuration # Check: '
-        c = req.hmgr.config
+    check: recipe.wrap( 'Hive # Configuration # Check', (c, next) ->
         # Make sure hadoop build is not present other hive throw JDOFatalInternalException
-        path.exists "#{c.hadoop.prefix}/build", (exists) ->
-            return res.red('FAILED').ln() and next new Error 'Hadoop build directory shall disappear' if exists
-            res.cyan('OK').ln()
-            next()
-    attributes: (req, res, next) ->
-        res.blue 'Hive # Configuration # Attributes: '
-        c = req.hmgr.config
-        #req.question c.hive.attributes, (attrs) ->
-        attrs = c.hive.attributes
-        attrs['hive.exec.scratchdir'] = path.resolve c.core.tmp, attrs['hive.exec.scratchdir']
-        attrs['hive.log.direxec'] = path.resolve c.core.log, attrs['hive.log.direxec']
-        attrs['hive.log.dir'] = path.resolve c.core.log, attrs['hive.log.dir']
-        attrs['hadoop_home'] = c.hadoop.prefix
+        path.exists "#{c.conf.hadoop.prefix}/build", (exists) ->
+            err = new Error 'Hadoop build directory shall disappear' if exists
+            next err, recipe.OK
+    )
+    attributes: recipe.wrap( 'Hive # Configuration # Attributes', (c, next) ->
+        attrs = c.conf.hive.attributes
+        attrs['hive.exec.scratchdir'] = path.resolve c.conf.core.tmp, attrs['hive.exec.scratchdir']
+        attrs['hive.log.direxec'] = path.resolve c.conf.core.log, attrs['hive.log.direxec']
+        attrs['hive.log.dir'] = path.resolve c.conf.core.log, attrs['hive.log.dir']
+        attrs['hadoop_home'] = c.conf.hadoop.prefix
         attrs['hive.metastore.local'] = 'true' #todo
         switch attrs.database_engine
             when 'mysql'
@@ -52,29 +48,26 @@ module.exports =
         files = ['hive-env.sh', 'hive-site.xml', 'hive-log4j.properties', 'hive-exec-log4j.properties']
         files = for file in files
             {
-                source: "#{__dirname}/../templates/#{c.hive.version}/#{file}"
-                destination: "#{c.hive.conf}/#{file}"
+                source: "#{__dirname}/../templates/#{c.conf.hive.version}/#{file}"
+                destination: "#{c.conf.hive.conf}/#{file}"
                 context: attrs
             }
         mecano.render files, (err, rendered) ->
-            return res.red('FAILED').ln() && next err if err
-            fixpwpath = "#{c.hive.conf}/hive-default.xml"
+            return next err if err
+            fixpwpath = "#{c.conf.hive.conf}/hive-default.xml"
             fs.readFile fixpwpath, 'ascii', (err, content) ->
                 content = content.replace /mine/, ''
                 fs.writeFile fixpwpath, content, (err) ->
-                    res.cyan(if rendered then 'OK' else 'SKIPPED').ln()
-                    next()
-    dirs: (req, res, next) ->
-        res.blue 'Hive # Configuration # Directories: '
-        c = req.hmgr.config
+                    next err, if rendered then recipe.OK else recipe.SKIPPED
+    )
+    dirs: recipe.wrap( 'Hive # Configuration # Directories', (c, next) ->
         mecano.mkdir
-            directory: path.dirname c.hive.pid
+            directory: path.dirname c.conf.hive.pid
             chmod: 0755
         , (err, created) ->
-            return res.cyan('FAILED').ln() && next err if err
-            res.cyan(if created then 'OK' else 'SKIPPED').ln()
-            next()
-    database: (req, res, next) ->
+            next err, if created then recipe.OK else recipe.SKIPPED
+    )
+    database: recipe.wrap( 'Hive # Configure # Database', (c, next) ->
         # Hive will complain on schema creation if encoding isnt latin1
         # because it try to insert some very large keys
         # such a good dump java citizen
@@ -84,9 +77,7 @@ module.exports =
         # But wait, there is always a solution:
         # downgrade to mysql server <= 5.1.58
         # TODO: check mysql version, create db & user
-        res.blue 'Hive # Configure # Database: '
-        c = req.hmgr.config
-        attrs = c.hive.attributes
+        attrs = c.conf.hive.attributes
         client = null
         databases = null
         created = 0
@@ -117,29 +108,26 @@ module.exports =
                 close()
         close = (e) ->
             client.end (err) ->
-                return res.red('FAILED').ln() and next err if e or err
-                if created is 2 then message = 'OK' 
-                else if created is 1 then message = 'PARTIAL'
-                else message = 'SKIPPED'
-                res.cyan(message).ln()
-                next()
+                if created is 2 then code = recipe.OK
+                else if created is 1 then code = recipe.PARTIAL
+                else code = recipe.SKIPPED
+                next err, code
         connect()
-    hdfs: (req, res, next) ->
-        return next()
-        c = req.hmgr.config
+    )
+    hdfs: recipe.wrap( 'Hive # Configure # HDFS', (c, next) ->
+        return next null, recipe.TODO
         # Extract namenode hostname and port
-        properties.read "#{c.hadoop.conf}/core-site.xml", 'fs.default.name', (err, value) ->
+        properties.read "#{c.conf.hadoop.conf}/core-site.xml", 'fs.default.name', (err, value) ->
             return res.red('FAILED').ln() and next err if err
             [_, host, port] = /:\/\/(.+):(\d+)\/?$/.exec(value)
             # Make sure hdfs is running
             mecano.isPortOpen port, host, (err, open) ->
                 return res.red('FAILED').ln() and next err if err
                 return res.red('FAILED').ln() and next new Error 'Failed to create Hive directory, Hadoop not started' unless open
-                exec "#{c.hadoop.bin}/hadoop fs -test -e #{hive.metastore.warehouse.dir}", (err, stdout, stderr) ->
+                exec "#{c.conf.hadoop.bin}/hadoop fs -test -e #{hive.metastore.warehouse.dir}", (err, stdout, stderr) ->
                     return res.cyan('SKIPPED').ln() unless err
                     return res.red('FAILED').ln() and next err if err and err.code isnt 1
-                    exec "#{c.hadoop.bin}/hadoop fs -mkdir #{hive.metastore.warehouse.dir}", (err) ->
-                        return res.red('FAILED').ln() and next err if err
-                        res.cyan('OK').ln()
-                        next()
+                    exec "#{c.conf.hadoop.bin}/hadoop fs -mkdir #{hive.metastore.warehouse.dir}", (err) ->
+                        next err, recipe.OK
+    )
         

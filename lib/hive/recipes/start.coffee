@@ -1,13 +1,11 @@
 
 start_stop = require 'shell/lib/start_stop'
+recipe = require '../../recipe'
 
-module.exports = (req, res, next) ->
-    res.blue 'Hive # Start: '
-    c = req.hmgr.config
+module.exports = recipe.wrap( 'Hive # Start', (c, next) ->
     start_stop.start
-        cmd: "#{c.core.bin}/hive --service hiveserver"
-        pidfile: "#{c.hive.pid}"
+        cmd: "#{c.conf.core.bin}/hive --service hiveserver"
+        pidfile: "#{c.conf.hive.pid}"
     , (err, pid) ->
-        return res.red('FAILED').ln() && next err if err
-        res.cyan(if pid then 'OK' else 'ALREADY STARTED').ln()
-        next()
+        next err, if pid then recipe.OK else recipe.SKIPPED
+)

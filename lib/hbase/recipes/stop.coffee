@@ -8,10 +8,10 @@ module.exports =
             cmd: "hbase-daemon.sh --config #{c.conf.hbase.conf} stop master"
             cwd: c.conf.core.bin
             code: [0, 1]
-        , (err, stdout, stderr) ->
-            if /stopping master/.test stderr
+        , (err, executed, stdout, stderr) ->
+            if /stopping master/.test stdout
                 code = recipe.OK
-            else if /no master to stop/.test stderr
+            else if /no master to stop/.test stdout
                 code = recipe.SKIPPED
             else code = recipe.FAILED
             next err, code
@@ -21,10 +21,10 @@ module.exports =
             cmd: "hbase-daemon.sh --config #{c.conf.hbase.conf} stop regionserver"
             cwd: c.conf.core.bin
             code: [0, 1]
-        , (err, stdout, stderr) ->
-            if /stopping regionserver/.test stderr
+        , (err, executed, stdout, stderr) ->
+            if /stopping regionserver/.test stdout
                 code = recipe.OK
-            else if /no regionserver to stop/.test stderr
+            else if /no regionserver to stop/.test stdout
                 code = recipe.SKIPPED
             else code = recipe.FAILED
             next err, code
@@ -34,10 +34,10 @@ module.exports =
             cmd: "hbase-daemon.sh --config #{c.conf.hbase.conf} stop rest"
             cwd: c.conf.core.bin
             code: [0, 1]
-        , (err, stdout, stderr) ->
-            if /stopping rest/.test stderr
+        , (err, executed, stdout, stderr) ->
+            if /stopping rest/.test stdout
                 code = recipe.OK
-            else if /no rest to stop/.test stderr
+            else if /no rest to stop/.test stdout
                 code = recipe.SKIPPED
             else code = recipe.FAILED
             next err, code

@@ -1,21 +1,17 @@
 
 path = require 'path'
-fs = require 'fs'
-glob = require('glob').glob
+glob = require 'glob'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports = 
-    bin: (req, res, next) ->
-        res.blue 'Oozie # Activation # Bin: '
-        c = req.hmgr.config
-        glob "#{c.oozie.bin}/*", (err, files) ->
+    bin: recipe.wrap( 'Oozie # Activation # Bin', (c, next) ->
+        glob "#{c.conf.oozie.bin}/*", (err, files) ->
             if err then res.red('FAILED').ln() && next err
             files = for file in files
                 basename = path.basename file
-                destination = "#{c.core.bin}/#{basename}"
+                destination = "#{c.conf.core.bin}/#{basename}"
                 { source: file, destination: destination, exec: true }
             mecano.link files, (err, created) ->
-                if err then res.red('FAILED').ln() && next err
-                else
-                    res.cyan(if created then 'OK' else 'SKIPPED').ln()
-                    next()
+                next err, if created then recipe.OK else recipe.SKIPPED
+    )

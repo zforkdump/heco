@@ -1,27 +1,22 @@
 
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports = 
-    bin: (req, res, next) ->
-        res.blue 'Hive # Activation # Bin: '
-        c = req.hmgr.config
+    bin: recipe.wrap( 'Hive # Activation # Bin', (c, next) ->
         mecano.link
-            source: "#{c.hive.bin}/hive"
-            destination: "#{c.core.bin}/hive"
+            source: "#{c.conf.hive.bin}/hive"
+            destination: "#{c.conf.core.bin}/hive"
             exec: true
             chmod: 0755
         , (err, created) ->
-            res.red('FAILED').ln() && next err if err
-            res.cyan(if created then 'OK' else 'SKIPPED').ln()
-            next()
-    conf: (req, res, next) ->
-        res.blue 'Hive # Activation # Conf: '
-        c = req.hmgr.config
+            next err, if created then recipe.OK else recipe.SKIPPED
+    )
+    conf: recipe.wrap( 'Hive # Activation # Conf', (c, next) ->
         mecano.link
-            source: c.hive.conf
-            destination: "#{c.core.etc}/hive"
+            source: c.conf.hive.conf
+            destination: "#{c.conf.core.etc}/hive"
         , (err, created) ->
-            return res.red('FAILED').ln() && next err if err
-            res.cyan(if created then 'OK' else 'SKIPPED').ln()
-            next()
+            next err, if created then recipe.OK else recipe.SKIPPED
+    )
     

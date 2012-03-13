@@ -9,7 +9,6 @@ module.exports =
             cwd: c.conf.core.bin
             code: [0, 1]
         , (err, executed, stdout, stderr) ->
-            console.log stderr
             if /starting master/.test stdout
                 code = recipe.OK
             else if /master running/.test stdout

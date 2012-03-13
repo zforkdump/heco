@@ -2,54 +2,44 @@
 path = require 'path'
 fs = require 'fs'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports =
-    download: (req, res, next) ->
-        res.blue 'Hive # Install # Download: '
-        c = req.hmgr.config
+    download: recipe.wrap( 'Hive # Install # Download', (c, next) ->
         mecano.download
-            source: c.hive.source
-            destination: "#{c.core.tmp}/#{path.basename c.hive.source}"
+            source: c.conf.hive.source
+            destination: "#{c.conf.core.tmp}/#{path.basename c.conf.hive.source}"
             force: false
         , (err, downloaded) ->
-            return res.red('FAILED').ln() and next err if err
-            res.cyan(if downloaded then 'OK' else 'CACHE').ln()
-            next()
-    download_driver: (req, res, next) ->
-        res.blue 'Hive # Install # Download MySQL driver: '
-        c = req.hmgr.config
-        name = /\/([\w\d-\.]+.tar.gz)/.exec(c.hive.attributes.database_driver_url)[1]
+            next err, if downloaded then recipe.OK else recipe.SKIPPED
+    )
+    download_driver: recipe.wrap( 'Hive # Install # Download MySQL driver', (c, next) ->
+        name = /\/([\w\d-\.]+.tar.gz)/.exec(c.conf.hive.attributes.database_driver_url)[1]
         mecano.download
-            source: c.hive.attributes.database_driver_url
-            destination: "#{c.core.tmp}/#{name}"
+            source: c.conf.hive.attributes.database_driver_url
+            destination: "#{c.conf.core.tmp}/#{name}"
         , (err, downloaded) ->
-            return res.red('FAILED').ln() and next err if err
-            res.cyan(if downloaded then 'OK' else 'CACHE').ln()
-            next()
-    extract: (req, res, next) ->
-        res.blue 'Hive # Install # Extract: '
-        c = req.hmgr.config
+            next err, if downloaded then recipe.OK else recipe.SKIPPED
+    )
+    extract: recipe.wrap( 'Hive # Install # Extract', (c, next) ->
         mecano.extract
-            source: "#{c.core.tmp}/#{path.basename c.hive.source}"
-            destination: c.core.lib
-            not_if_exists: "#{c.core.lib}/#{path.basename c.hive.source, '.tar.gz'}"
+            source: "#{c.conf.core.tmp}/#{path.basename c.conf.hive.source}"
+            destination: c.conf.core.lib
+            not_if_exists: "#{c.conf.core.lib}/#{path.basename c.conf.hive.source, '.tar.gz'}"
         , (err, extracted) ->
-            return res.red('FAILED').ln() and next err if err
-            res.cyan(if extracted then 'OK' else 'CACHE').ln()
-            next()
-    extract_driver: (req, res, next) ->
-        res.blue 'Hive # Install # Extract MySQL driver: '
-        c = req.hmgr.config
-        name = /\/([\w\d-\.]+.tar.gz)/.exec(c.hive.attributes.database_driver_url)[1]
+            next err, if extracted then recipe.OK else recipe.SKIPPED
+    )
+    extract_driver: recipe.wrap( 'Hive # Install # Extract MySQL driver', (c, next) ->
+        name = /\/([\w\d-\.]+.tar.gz)/.exec(c.conf.hive.attributes.database_driver_url)[1]
         mecano.extract
-            source: "#{c.core.tmp}/#{name}"
-            destination: c.core.tmp
-            not_if_exists: "#{c.hive.lib}/#{path.basename name, '.tar.gz'}-bin.jar"
+            source: "#{c.conf.core.tmp}/#{name}"
+            destination: c.conf.core.tmp
+            not_if_exists: "#{c.conf.hive.lib}/#{path.basename name, '.tar.gz'}-bin.jar"
         , (err, extracted) ->
-            return res.red('FAILED').ln() and next err if err
-            return res.cyan('SKIPPED').ln() and next() unless extracted
-            fs.rename "#{c.core.tmp}/#{path.basename name, '.tar.gz'}/#{path.basename name, '.tar.gz'}-bin.jar", "#{c.hive.lib}/#{path.basename name, '.tar.gz'}-bin.jar", (err) ->
-                mecano.rm "#{c.core.tmp}/#{path.basename name, '.tar.gz'}", (err, removed) ->
-                    return res.red('FAILED').ln() and next err if err or not removed
-                    res.cyan('OK').ln()
-                    next()
+            return next err, recipe.SKIPPED if err or not extracted
+            fs.rename "#{c.conf.core.tmp}/#{path.basename name, '.tar.gz'}/#{path.basename name, '.tar.gz'}-bin.jar", "#{c.conf.hive.lib}/#{path.basename name, '.tar.gz'}-bin.jar", (err) ->
+                next err if err
+                mecano.rm "#{c.conf.core.tmp}/#{path.basename name, '.tar.gz'}", (err, removed) ->
+                    err = new Error 'Failed to clear archive' if not err and not removed
+                    next err, recipe.OK
+    )

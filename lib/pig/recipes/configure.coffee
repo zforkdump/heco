@@ -1,6 +1,6 @@
 
+recipe = require '../../recipe'
 
-module.exports = (req, res, next) ->
-    res.blue 'Pig # Configuration: '
-    res.red('TODO').ln()
-    next()
+module.exports = recipe.wrap( 'Pig # Configuration', (c, next) ->
+    next null, recipe.TODO
+)

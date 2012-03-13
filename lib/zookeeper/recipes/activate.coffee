@@ -1,7 +1,8 @@
 
 path = require 'path'
-glob = require('glob').glob
+glob = require 'glob'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports = 
     bin: (req, res, next) ->

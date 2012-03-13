@@ -1,47 +1,34 @@
 
 fs = require 'fs'
 path = require 'path'
-glob = require('glob').glob
+glob = require 'glob'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports = 
-    bin: (req, res, next) ->
-        res.blue 'Hue # Activation # Bin: '
-        c = req.hmgr.config
+    bin: recipe.wrap( 'Hue # Activation # Bin', (c, next) ->
         mecano.link
-            source: "#{c.hue.prefix}/build/env/bin/supervisor"
-            destination: "#{c.core.bin}/hue"
+            source: "#{c.conf.hue.prefix}/build/env/bin/supervisor"
+            destination: "#{c.conf.core.bin}/hue"
             exec: true
             chmod: 0755
-        , (err, created) ->
-            if err then res.red('FAILED').ln() && next err
-            else
-                res.cyan(if created then 'OK' else 'SKIPPED').ln()
-                next()
-    jars: (req, res, next) ->
-        res.blue 'Hue # Activate # Hadoop jars: '
-        c = req.hmgr.config
-        glob "#{c.hue.prefix}/desktop/libs/hadoop/java-lib/hue*jar", (err, jars) ->
+        , (err, linked) ->
+            next err, if linked then recipe.OK else recipe.SKIPPED
+    )
+    jars: recipe.wrap( 'Hue # Activate # Hadoop jars', (c, next) ->
+        glob "#{c.conf.hue.prefix}/desktop/libs/hadoop/java-lib/hue*jar", (err, jars) ->
             jars = for jar in jars
-                { source: jar, destination: "#{c.hadoop.prefix}/lib/#{path.basename jar}" }
+                { source: jar, destination: "#{c.conf.hadoop.prefix}/lib/#{path.basename jar}" }
             mecano.link jars, (err, linked) ->
-                return res.red('FAILED').ln() and next err if err
-                res.cyan(if linked then 'OK' else 'SKIPPED').ln()
-                next()
-    conf: (req, res, next) ->
-        res.blue 'Hue # Activation # Conf: '
-        c = req.hmgr.config
-        mecano.mkdir
-            directory: "#{c.core.etc}/hue"
-        , (err, created) ->
-            return res.red('FAILED').ln() && next err if err
-            mecano.link [
-                source: "#{c.hue.prefix}/desktop/conf/hue.ini"
-                destination: "#{c.core.etc}/hue/hue.ini"
-            ,
-                source: "#{c.hue.prefix}/apps/beeswax/conf/hue-beeswax.ini"
-                destination: "#{c.core.etc}/hue/hue-beeswax.ini"
-            ], (err, created) ->
-                return res.red('FAILED').ln() && next err if err
-                res.cyan(if created then 'OK' else 'SKIPPED').ln()
-                next()
+                next err, if linked then recipe.OK else recipe.SKIPPED
+    )
+    conf: recipe.wrap( 'Hue # Activation # Conf', (c, next) ->
+        mecano.link [
+            source: "#{c.conf.hue.prefix}/desktop/conf/hue.ini"
+            destination: "#{c.conf.core.etc}/hue/hue.ini"
+        ,
+            source: "#{c.conf.hue.prefix}/apps/beeswax/conf/hue-beeswax.ini"
+            destination: "#{c.conf.core.etc}/hue/hue-beeswax.ini"
+        ], (err, linked) ->
+            next err, if linked then recipe.OK else recipe.SKIPPED
+    )

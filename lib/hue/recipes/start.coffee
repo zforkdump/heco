@@ -1,13 +1,11 @@
 
 start_stop = require 'shell/lib/start_stop'
+recipe = require '../../recipe'
 
-module.exports = (req, res, next) ->
-    res.blue 'Hue # Start: '
-    c = req.hmgr.config
+module.exports = recipe.wrap( 'Hue # Start', (c, next) ->
     start_stop.start
-        pidfile: "#{c.hue.pid}/supervisor.pid"
-        cmd: "#{c.core.bin}/hue"
+        pidfile: "#{c.conf.hue.pid}/supervisor.pid"
+        cmd: "#{c.conf.core.bin}/hue"
     , (err, pid) ->
-        return res.red('FAILED').ln() && next err if err
-        res.cyan(if pid then 'OK' else 'ALREADY STARTED').ln()
-        next()
+        next err, if pid then recipe.OK else recipe.SKIPPED
+)

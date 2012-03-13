@@ -2,6 +2,7 @@
 fs = require 'fs'
 path = require 'path'
 mecano = require 'mecano'
+recipe = require '../../recipe'
 
 module.exports = 
     attributes: (req, res, next) ->

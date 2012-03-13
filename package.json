@@ -1,7 +1,7 @@
 {
     "name": "heco",
     "description": "Hadoop Ecosystem",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "author": "David Worms",
     "contributors": [ 
         { "name": "David Worms", "email": "david@adaltas.com" }

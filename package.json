@@ -21,7 +21,9 @@
         "heco-hue": "latest",
         "heco-zookeeper": "latest",
         "heco-thrift": "latest",
-        "heco-flume": "latest"
+        "heco-flume": "latest",
+        "mysql": "latest",
+        "each": "latest"
     },
     "keywords": [],
     "main": "index",

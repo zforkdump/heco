@@ -5,7 +5,7 @@ recipe = require '../../recipe'
 module.exports = 
     master: recipe.wrap( 'HBase # Start # Master', (c, next) ->
         mecano.exec
-            cmd: "hbase-daemon.sh --config #{c.conf.hbase.conf} start master"
+            cmd: "./hbase-daemon.sh --config #{c.conf.hbase.conf} start master"
             cwd: c.conf.core.bin
             code: [0, 1]
         , (err, executed, stdout, stderr) ->
@@ -18,7 +18,7 @@ module.exports =
     )
     regionserver: recipe.wrap( 'HBase # Start # RegionServer', (c, next) ->
         mecano.exec
-            cmd: "hbase-daemon.sh --config #{c.conf.hbase.conf} start regionserver"
+            cmd: "./hbase-daemon.sh --config #{c.conf.hbase.conf} start regionserver"
             cwd: c.conf.core.bin
             code: [0, 1]
         , (err, executed, stdout, stderr) ->
@@ -31,7 +31,7 @@ module.exports =
     )
     rest: recipe.wrap( 'HBase # Start # Rest server', (c, next) ->
         mecano.exec
-            cmd: "hbase-daemon.sh --config #{c.conf.hbase.conf} start rest"
+            cmd: "./hbase-daemon.sh --config #{c.conf.hbase.conf} start rest"
             cwd: c.conf.core.bin
             code: [0, 1]
         , (err, executed, stdout, stderr) ->

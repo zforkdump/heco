@@ -25,6 +25,7 @@ recipes.install = [
     recipes.routes.install.download
     recipes.routes.install.extract
     recipes.routes.install.build
+    recipes.configure
     recipes.activate
 ]
 

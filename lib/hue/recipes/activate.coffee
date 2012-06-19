@@ -11,7 +11,7 @@ module.exports =
             source: "#{c.conf.hue.prefix}/build/env/bin/supervisor"
             destination: "#{c.conf.core.bin}/hue"
             exec: true
-            chmod: 0755
+            chmod: 0o0755
         , (err, linked) ->
             next err, if linked then recipe.OK else recipe.SKIPPED
     )

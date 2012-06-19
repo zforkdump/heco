@@ -36,5 +36,4 @@ recipes.install = [
     recipes.routes.install.extract
     recipes.configure
     recipes.activate
-    recipes.start
 ]

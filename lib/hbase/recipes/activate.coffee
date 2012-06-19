@@ -15,7 +15,7 @@ module.exports =
                 source: "#{c.conf.hbase.bin}/#{file}"
                 destination: "#{c.conf.core.bin}/#{file}"
                 exec: true
-                chmod: 0755
+                chmod: 0o0755
         mecano.link links, (err, created) ->
             next err, if created then recipe.OK else recipe.SKIPPED
     )

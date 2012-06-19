@@ -8,7 +8,7 @@ module.exports =
             source: "#{c.conf.hive.bin}/hive"
             destination: "#{c.conf.core.bin}/hive"
             exec: true
-            chmod: 0755
+            chmod: 0o0755
         , (err, created) ->
             next err, if created then recipe.OK else recipe.SKIPPED
     )

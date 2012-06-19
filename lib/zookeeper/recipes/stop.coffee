@@ -4,7 +4,7 @@ recipe = require '../../recipe'
 
 module.exports = recipe.wrap( 'ZooKeeper # Stop', (c, next) ->
     mecano.exec
-        cmd: 'zkServer.sh stop'
+        cmd: './zkServer.sh stop'
         cwd: c.conf.core.bin
     , (err, executed, stdout, stderr) ->
         if /STOPPED/.test stdout

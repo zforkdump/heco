@@ -29,7 +29,19 @@ module.exports = (req, res, next) ->
         #sqoop.recipes.install
         shell.routes.prompt
     ]
-    app.cmd 'uninstall', 'Remove all the Hadoop components', [
+    app.cmd 'activate', 'Remove all the Hadoop components', [
+        #shell.routes.confirm 'Remove all the components and data'
+        zookeeper.recipes.activate
+        hadoop.recipes.activate
+        hbase.recipes.activate
+        hive.recipes.activate
+        pig.recipes.activate
+        oozie.recipes.activate
+        hue.recipes.activate
+        #thrift.recipes.activate
+        shell.routes.prompt 'Hadoop has been activated'
+    ]
+    app.cmd 'desactivate', 'Remove all the Hadoop components', [
         #shell.routes.confirm 'Remove all the components and data'
         zookeeper.recipes.desactivate
         hadoop.recipes.desactivate
@@ -39,7 +51,7 @@ module.exports = (req, res, next) ->
         oozie.recipes.desactivate
         hue.recipes.desactivate
         #thrift.recipes.desactivate
-        shell.routes.prompt 'Hadoop has been Uninstalled'
+        shell.routes.prompt 'Hadoop has been desactivated'
     ]
     app.cmd 'configure', 'Configure all the Hadoop components', [
         zookeeper.recipes.configure

@@ -63,7 +63,7 @@ module.exports =
     dirs: recipe.wrap( 'Hive # Configuration # Directories', (c, next) ->
         mecano.mkdir
             directory: path.dirname c.conf.hive.pid
-            chmod: 0755
+            chmod: 0o0755
         , (err, created) ->
             next err, if created then recipe.OK else recipe.SKIPPED
     )

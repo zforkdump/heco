@@ -5,28 +5,22 @@ mecano = require 'mecano'
 recipe = require '../../recipe'
 
 module.exports = 
-    bin: (req, res, next) ->
-        res.blue 'ZooKeeper # Activation # Bin: '
-        c = req.hmgr.config
-        glob "#{c.zookeeper.bin}/*.sh", (err, files) ->
+    bin: recipe.wrap( 'ZooKeeper # Activation # Bin', (c, next) ->
+        glob "#{c.conf.zookeeper.bin}/*.sh", (err, files) ->
             links = []
             for file in files
                 links.push
                     source: file
-                    destination: "#{c.core.bin}/#{path.basename file}"
+                    destination: "#{c.conf.core.bin}/#{path.basename file}"
                     exec: true
-                    chmod: 0755
+                    chmod: 0o0755
             mecano.link links, (err, created) ->
-                return res.red('FAILED').ln() && next err if err
-                res.cyan(if created then 'OK' else 'SKIPPED').ln()
-                next()
-    conf: (req, res, next) ->
-        res.blue 'ZooKeeper # Activation # Conf: '
-        c = req.hmgr.config
+                next err, if created then recipe.OK else recipe.SKIPPED
+    )
+    conf: recipe.wrap( 'ZooKeeper # Activation # Conf', (c, next) ->
         mecano.link
-            source: "#{c.zookeeper.conf}"
-            destination: "#{c.core.etc}/zookeeper"
+            source: "#{c.conf.zookeeper.conf}"
+            destination: "#{c.conf.core.etc}/zookeeper"
         , (err, created) ->
-            return res.red('FAILED').ln() && next err if err
-            res.cyan(if created then 'OK' else 'SKIPPED').ln()
-            next()
+            next err, if created then recipe.OK else recipe.SKIPPED
+    )

@@ -30,7 +30,7 @@ module.exports =
     dirs: recipe.wrap( 'Hue # Configuration # Directories', (c, next) ->
         mecano.mkdir [
             directory: c.conf.hue.pid
-            chmod: 0755
+            chmod: 0o0755
         ], (err, created) ->
             next err, if created then recipe.OK else recipe.SKIPPED
     )

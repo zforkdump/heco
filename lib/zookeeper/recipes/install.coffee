@@ -4,27 +4,19 @@ mecano = require 'mecano'
 recipe = require '../../recipe'
 
 module.exports =
-    download: (req, res, next) ->
-        res.blue 'ZooKeeper # Install # Download: '
-        c = req.hmgr.config
+    download: recipe.wrap('ZooKeeper # Install # Download', (c, next) ->
         mecano.download
-            source: c.zookeeper.source
-            destination: "#{c.core.tmp}/#{path.basename c.zookeeper.source}"
+            source: c.conf.zookeeper.source
+            destination: "#{c.conf.core.tmp}/#{path.basename c.conf.zookeeper.source}"
             force: false
         , (err, downloaded) ->
-            return next err if err
-            message = if downloaded then 'OK' else 'CACHE'
-            res.cyan(message).ln()
-            next()
-    extract: (req, res, next) ->
-        res.blue 'ZooKeeper # Install # Extract: '
-        c = req.hmgr.config
+            next err, if downloaded then recipe.OK else recipe.SKIPPED
+    )
+    extract: recipe.wrap('ZooKeeper # Install # Extract', (c, next) ->
         mecano.extract
-            source: "#{c.core.tmp}/#{path.basename c.zookeeper.source}"
-            destination: c.core.lib
-            not_if_exists: "#{c.core.lib}/#{path.basename c.zookeeper.source, '.tar.gz'}"
+            source: "#{c.conf.core.tmp}/#{path.basename c.conf.zookeeper.source}"
+            destination: c.conf.core.lib
+            not_if_exists: "#{c.conf.core.lib}/#{path.basename c.conf.zookeeper.source, '.tar.gz'}"
         , (err, extracted) ->
-            return next err if err
-            message = if extracted then 'OK' else 'CACHE'
-            res.cyan(message).ln()
-            next()
+            next err, if extracted then recipe.OK else recipe.SKIPPED
+    )

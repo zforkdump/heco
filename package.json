@@ -12,16 +12,8 @@
         "mecano": "latest",
         "glob": "latest",
         "dom-js": "latest",
-        "heco-core": "latest",
-        "heco-hadoop": "latest",
-        "heco-hbase": "latest",
-        "heco-hive": "latest",
-        "heco-pig": "latest",
-        "heco-oozie": "latest",
-        "heco-hue": "latest",
-        "heco-zookeeper": "latest",
-        "heco-thrift": "latest",
-        "heco-flume": "latest"
+        "mysql": "latest",
+        "each": "latest"
     },
     "keywords": [],
     "main": "index",

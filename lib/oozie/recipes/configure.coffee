@@ -2,5 +2,5 @@
 recipe = require '../../recipe'
 
 module.exports = recipe.wrap( 'Oozie # Configuration', (c, next) ->
-    next null, recipe.TODO
+  next null, recipe.TODO
 )

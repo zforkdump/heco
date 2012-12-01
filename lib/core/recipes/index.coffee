@@ -1,5 +1,5 @@
 
 module.exports = 
-    layout: require './layout'
-    java: require './java'
-        
+  layout: require './layout'
+  java: require './java'
+    

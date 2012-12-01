@@ -2,27 +2,27 @@
 recipes = module.exports = {}
 
 recipes.routes =
-    configure: require './configure'
-    activate: require './activate'
-    desactivate: require './desactivate'
-    install: require './install'
+  configure: require './configure'
+  activate: require './activate'
+  desactivate: require './desactivate'
+  install: require './install'
 
 recipes.activate = [
-    recipes.routes.activate.bin
+  recipes.routes.activate.bin
 ]
 
 recipes.configure = [
-    recipes.routes.configure
+  recipes.routes.configure
 ]
 
 recipes.desactivate = [
-    recipes.routes.desactivate.bin
+  recipes.routes.desactivate.bin
 ]
 
 recipes.install = [
-    recipes.routes.install.download
-    recipes.routes.install.extract
-    recipes.configure
-    recipes.activate
+  recipes.routes.install.download
+  recipes.routes.install.extract
+  recipes.configure
+  recipes.activate
 ]
 

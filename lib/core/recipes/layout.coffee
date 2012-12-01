@@ -8,7 +8,7 @@ module.exports = (req, res, next) ->
         'prefix', 'bin', 'etc', 'lib', 
         'tmp', 'var', 'log'
     ])
-    .on 'item', (next, name) ->
+    .on 'item', (name, next) ->
         mecano.mkdir
             directory: c.core[name]
             chmod: c.core["#{name}_mask"]

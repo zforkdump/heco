@@ -36,27 +36,27 @@ module.exports =
     )
     database: recipe.wrap( 'Hue # Configure # Database', (c, next) ->
         attrs = c.conf.hue.attributes
-        client_end = (callback) ->
-            client.end (err) ->
+        connection_end = (callback) ->
+            connection.end (err) ->
                 callback err
-        client = mysql.createClient
+        connection = mysql.createConnection
             host: attrs.database_host
             user: attrs.database_user
             password: attrs.database_password
-        client.query 'SHOW DATABASES;', (err, databases) ->
+        connection.query 'SHOW DATABASES;', (err, databases) ->
             return next err if err
             if (databases.filter (database) -> database.Database is 'hue').length
-                return client_end ->
+                return connection_end ->
                     next null, recipe.SKIPPED
-            client.query 'CREATE DATABASE `hue`;', (err, result) ->
-                client_end ->
+            connection.query 'CREATE DATABASE `hue`;', (err, result) ->
+                connection_end ->
                     next err, recipe.OK
     )
     # TODO: Build only if configuration has changed to reflect changes in database settings
     # Among the created file: './app.reg'
     build: recipe.wrap( 'Hue # Configure # Build', (c, next) ->
         mecano.exec
-            cmd: 'make apps'
+            cmd: 'export CC=gcc && make apps'
             cwd: c.conf.hue.prefix
             not_if_exists: "#{c.conf.hue.prefix}/app.reg"
         , (err, executed, stdout, stderr) ->

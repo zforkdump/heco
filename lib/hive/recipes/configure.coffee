@@ -78,36 +78,36 @@ module.exports =
         # downgrade to mysql server <= 5.1.58
         # TODO: check mysql version, create db & user
         attrs = c.conf.hive.attributes
-        client = null
+        connection = null
         databases = null
         created = 0
         connect = () ->
-            client = mysql.createClient
+            connection = mysql.createConnection
                 host: attrs.database_host
                 user: attrs.database_username
                 password: attrs.database_password
             list()
         list = () ->
-            client.query 'SHOW DATABASES;', (err, dbs) ->
+            connection.query 'SHOW DATABASES;', (err, dbs) ->
                 return close err if err
                 databases = dbs
                 metastore()
         metastore = () ->
             if (databases.filter (database) -> database.Database is attrs.database_name).length
                 return stats()
-            client.query "CREATE DATABASE `#{attrs.database_name}`;", (err, result) ->
+            connection.query "CREATE DATABASE `#{attrs.database_name}`;", (err, result) ->
                 return close err if err
                 created++
                 stats()
         stats = () ->
             if (databases.filter (database) -> database.Database is attrs.stats_database_name).length
                 return close()
-            client.query "CREATE DATABASE `#{attrs.stats_database_name}`;", (err, result) ->
+            connection.query "CREATE DATABASE `#{attrs.stats_database_name}`;", (err, result) ->
                 return close err if err
                 created++
                 close()
         close = (e) ->
-            client.end (err) ->
+            connection.end (err) ->
                 if created is 2 then code = recipe.OK
                 else if created is 1 then code = recipe.PARTIAL
                 else code = recipe.SKIPPED

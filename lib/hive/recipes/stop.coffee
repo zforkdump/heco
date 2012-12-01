@@ -4,8 +4,8 @@ recipe = require '../../recipe'
 
 module.exports = recipe.wrap( 'Hive # Stop', (c, next) ->
     start_stop.stop
-        detach: true
         pidfile: "#{c.conf.hive.pid}"
+        detached: true
     , (err, stoped) ->
         next err, if stoped then recipe.OK else recipe.SKIPPED
 )

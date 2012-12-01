@@ -1,6 +1,5 @@
 
-module.exports = 
-  core: 
+module.exports = core: 
   prefix : './local'
   prefix_mask : 0o0755
   bin : "./bin"

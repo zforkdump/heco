@@ -36,10 +36,7 @@ module.exports = hadoop = (req, res, next) ->
   ]
   c = req.hmgr.config
   mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.zookeeper.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    c.zookeeper.prefix = "#{c.core.lib}/#{path.basename c.zookeeper.source, '.tar.gz'}"
-    c.zookeeper.bin = "#{c.zookeeper.prefix}/bin"
-    c.zookeeper.conf = "#{c.zookeeper.prefix}/conf"
-    next()
+  c.zookeeper.prefix = "#{c.core.lib}/#{path.basename c.zookeeper.source, '.tar.gz'}"
+  c.zookeeper.bin = "#{c.zookeeper.prefix}/bin"
+  c.zookeeper.conf = "#{c.zookeeper.prefix}/conf"
+  next()

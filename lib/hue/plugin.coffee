@@ -36,10 +36,6 @@ module.exports = (req, res, next) ->
   ]
   c = req.hmgr.config
   mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.hue.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    # Default to ./local/lib/hue-1.2.0.0-cdh3u3
-    c.hue.prefix = "#{c.core.lib}/#{path.basename c.hue.source, '.tar.gz'}"
-    c.hue.pid = "#{c.core.var}/run/hue"
-    next()
+  c.hue.prefix = "#{c.core.lib}/#{path.basename c.hue.source, '.tar.gz'}"
+  c.hue.pid = "#{c.core.var}/run/hue"
+  next()

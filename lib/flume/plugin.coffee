@@ -22,13 +22,10 @@ module.exports = (req, res, next) ->
     shell.routes.prompt 'Flume installed'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.flume.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    c.flume.prefix = "#{c.core.lib}/#{path.basename c.flume.source, '.tar.gz'}"
-    c.flume.bin = "#{c.flume.prefix}/bin"
-    c.flume.conf = "#{c.flume.prefix}/conf"
-    c.flume.log = "#{c.core.log}/flume"
-    c.flume.pid = "#{c.core.var}/run/flume"
-    next()
+  mecano.merge true, c, require './conf'
+  c.flume.prefix = "#{c.core.lib}/#{path.basename c.flume.source, '.tar.gz'}"
+  c.flume.bin = "#{c.flume.prefix}/bin"
+  c.flume.conf = "#{c.flume.prefix}/conf"
+  c.flume.log = "#{c.core.log}/flume"
+  c.flume.pid = "#{c.core.var}/run/flume"
+  next()

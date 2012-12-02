@@ -35,12 +35,9 @@ module.exports = hadoop = (req, res, next) ->
     shell.routes.prompt 'Hadoop stoped'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.hadoop.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    c.hadoop.prefix = "#{c.core.lib}/#{path.basename c.hadoop.source, '.tar.gz'}"
-    c.hadoop.bin = "#{c.hadoop.prefix}/bin"
-    c.hadoop.conf = "#{c.hadoop.prefix}/conf"
-    c.hadoop.logs = "#{c.hadoop.prefix}/logs"
-    next()
+  mecano.merge true, c, require './conf'
+  c.hadoop.prefix = "#{c.core.lib}/#{path.basename c.hadoop.source, '.tar.gz'}"
+  c.hadoop.bin = "#{c.hadoop.prefix}/bin"
+  c.hadoop.conf = "#{c.hadoop.prefix}/conf"
+  c.hadoop.logs = "#{c.hadoop.prefix}/logs"
+  next()

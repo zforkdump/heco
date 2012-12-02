@@ -40,11 +40,8 @@ module.exports = (req, res, next) ->
   ]
   c = req.hmgr.config
   mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.hbase.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    c.hbase.prefix = "#{c.core.lib}/#{path.basename c.hbase.source, '.tar.gz'}"
-    c.hbase.bin = "#{c.hbase.prefix}/bin"
-    c.hbase.conf = "#{c.hbase.prefix}/conf"
-    c.hbase.log = "#{c.hbase.prefix}/logs"
-    next()
+  c.hbase.prefix = "#{c.core.lib}/#{path.basename c.hbase.source, '.tar.gz'}"
+  c.hbase.bin = "#{c.hbase.prefix}/bin"
+  c.hbase.conf = "#{c.hbase.prefix}/conf"
+  c.hbase.log = "#{c.hbase.prefix}/logs"
+  next()

@@ -19,11 +19,7 @@ module.exports = hadoop = (req, res, next) ->
   ]
   c = req.hmgr.config
   mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.pig.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    c.pig.prefix = "#{c.core.lib}/#{path.basename c.pig.source, '.tar.gz'}"
-    c.pig.bin = "#{c.pig.prefix}/bin"
-    #c.pig.conf = "#{c.pig.prefix}/conf"
-    next()
+  c.pig.prefix = "#{c.core.lib}/#{path.basename c.pig.source, '.tar.gz'}"
+  c.pig.bin = "#{c.pig.prefix}/bin"
+  next()
 

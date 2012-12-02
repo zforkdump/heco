@@ -19,10 +19,7 @@ module.exports = (req, res, next) ->
   ]
   c = req.hmgr.config
   mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.oozie.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    c.oozie.prefix = "#{c.core.lib}/#{path.basename c.oozie.source, '.tar.gz'}"
-    c.oozie.bin = "#{c.oozie.prefix}/bin"
-    next()
+  c.oozie.prefix = "#{c.core.lib}/#{path.basename c.oozie.source, '.tar.gz'}"
+  c.oozie.bin = "#{c.oozie.prefix}/bin"
+  next()
 

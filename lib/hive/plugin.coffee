@@ -36,12 +36,9 @@ module.exports = (req, res, next) ->
   ]
   c = req.hmgr.config
   mecano.merge true, c, require './conf/default'
-  versionConfigPath = "#{__dirname}/./conf/#{c.hive.version}.coffee"
-  path.exists versionConfigPath, (exists) ->
-    mecano.merge true, c, require versionConfigPath if exists
-    c.hive.prefix = "#{c.core.lib}/#{path.basename c.hive.source, '.tar.gz'}"
-    c.hive.bin = "#{c.hive.prefix}/bin"
-    c.hive.conf = "#{c.hive.prefix}/conf"
-    c.hive.lib = "#{c.hive.prefix}/lib"
-    c.hive.pid = "#{c.core.var}/run/hive"
-    next()
+  c.hive.prefix = "#{c.core.lib}/#{path.basename c.hive.source, '.tar.gz'}"
+  c.hive.bin = "#{c.hive.prefix}/bin"
+  c.hive.conf = "#{c.hive.prefix}/conf"
+  c.hive.lib = "#{c.hive.prefix}/lib"
+  c.hive.pid = "#{c.core.var}/run/hive"
+  next()

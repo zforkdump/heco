@@ -21,5 +21,4 @@ module.exports = hadoop = (req, res, next) ->
   mecano.merge true, c, require './conf/default'
   c.thrift.prefix = "#{c.core.lib}/#{path.basename c.thrift.source, '.tar.gz'}"
   c.thrift.bin = "#{c.thrift.prefix}/bin"
-  #c.thrift.conf = "#{c.thrift.prefix}/conf"
   next()

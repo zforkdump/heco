@@ -35,7 +35,7 @@ module.exports = (req, res, next) ->
     shell.routes.prompt 'Hue stoped'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
+  mecano.merge true, c, require './conf'
   c.hue.prefix = "#{c.core.lib}/#{path.basename c.hue.source, '.tar.gz'}"
   c.hue.pid = "#{c.core.var}/run/hue"
   next()

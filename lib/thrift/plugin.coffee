@@ -18,7 +18,7 @@ module.exports = hadoop = (req, res, next) ->
     shell.routes.prompt 'Thrift installed'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
+  mecano.merge true, c, require './conf'
   c.thrift.prefix = "#{c.core.lib}/#{path.basename c.thrift.source, '.tar.gz'}"
   c.thrift.bin = "#{c.thrift.prefix}/bin"
   next()

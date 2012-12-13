@@ -1,6 +1,7 @@
 
 module.exports = hue:
   version: '1.2.0.0-cdh3u3'
+  source: 'http://archive.cloudera.com/cdh4/cdh/4/hue-2.1.0-cdh4.1.2.tar.gz'
   attributes:
     'secret_key': ''
     'http_host': '0.0.0.0'

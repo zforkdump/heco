@@ -18,7 +18,7 @@ module.exports = (req, res, next) ->
     shell.routes.prompt 'Pig installed'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
+  mecano.merge true, c, require './conf'
   c.oozie.prefix = "#{c.core.lib}/#{path.basename c.oozie.source, '.tar.gz'}"
   c.oozie.bin = "#{c.oozie.prefix}/bin"
   next()

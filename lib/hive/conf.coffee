@@ -1,6 +1,7 @@
 
 module.exports = hive:
   version: '0.7.1-cdh3u3'
+  source: 'http://archive.cloudera.com/cdh4/cdh/4/hive-0.9.0-cdh4.1.2.tar.gz'
   attributes: 
     'hive.exec.scratchdir': './tmp/hive-${user.name}'
     'hive.metastore.warehouse.dir': '/user/hive/warehouse'

@@ -1,6 +1,7 @@
 
 module.exports = hbase:
   version: '0.90.4-cdh3u3'
+  source: 'http://archive.cloudera.com/cdh4/cdh/4/hbase-0.92.1-cdh4.1.2.tar.gz'
   attributes: 
     'dfs.datanode.max.xcievers': 4096
     'hbase.cluster.distributed': true # Pseudo-distributed Mode

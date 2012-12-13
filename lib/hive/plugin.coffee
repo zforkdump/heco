@@ -35,7 +35,7 @@ module.exports = (req, res, next) ->
     shell.routes.prompt 'Hive restarted'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
+  mecano.merge true, c, require './conf'
   c.hive.prefix = "#{c.core.lib}/#{path.basename c.hive.source, '.tar.gz'}"
   c.hive.bin = "#{c.hive.prefix}/bin"
   c.hive.conf = "#{c.hive.prefix}/conf"

@@ -1,6 +1,7 @@
 
 module.exports = sqoop:
   version: '1.3.0-cdh3u3'
+  source: 'http://archive.cloudera.com/cdh4/cdh/4/sqoop-1.4.1-cdh4.1.2.tar.gz'
   attributes:
     ###
     A comma-delimited list of ManagerFactory implementations

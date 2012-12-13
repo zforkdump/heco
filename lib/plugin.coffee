@@ -2,93 +2,85 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-core = require './core'
-hadoop = require './hadoop'
-hbase = require './hbase'
-hive = require './hive'
-pig = require './pig'
-oozie = require './oozie'
-hue = require './hue'
-zookeeper = require './zookeeper'
-thrift = require './thrift'
-#flume = require 'heco-flume'
 
 module.exports = (req, res, next) ->
   app = req.shell
   # Register commands
   app.cmd 'install', 'Install all the Hadoop components', [
-    core.recipes.layout
-    zookeeper.recipes.install
-    hadoop.recipes.install
-    hbase.recipes.install
-    hive.recipes.install
-    pig.recipes.install
-    oozie.recipes.install
-    hue.recipes.install
-    #thrift.recipes.install
-    #sqoop.recipes.install
+    require './core/recipes/layout'
+    require './zookeeper/recipes/install'
+    require './hadoop/recipes/install'
+    require './hbase/recipes/install'
+    require './hive/recipes/install'
+    require './pig/recipes/install'
+    require './oozie/recipes/install'
+    require './hue/recipes/install'
+    #require './thrift/recipes/install'
+    #require './sqoop/recipes/install'
     shell.routes.prompt
   ]
   app.cmd 'activate', 'Remove all the Hadoop components', [
     #shell.routes.confirm 'Remove all the components and data'
-    zookeeper.recipes.activate
-    hadoop.recipes.activate
-    hbase.recipes.activate
-    hive.recipes.activate
-    pig.recipes.activate
-    oozie.recipes.activate
-    hue.recipes.activate
-    #thrift.recipes.activate
+    require './zookeeper/recipes/activate'
+    require './hadoop/recipes/activate'
+    require './hbase/recipes/activate'
+    require './hive/recipes/activate'
+    require './pig/recipes/activate'
+    require './oozie/recipes/activate'
+    require './hue/recipes/activate'
+    #require './thrift/recipes/activate'
     shell.routes.prompt 'Hadoop has been activated'
   ]
   app.cmd 'desactivate', 'Remove all the Hadoop components', [
-    #shell.routes.confirm 'Remove all the components and data'
-    zookeeper.recipes.desactivate
-    hadoop.recipes.desactivate
-    hbase.recipes.desactivate
-    hive.recipes.desactivate
-    pig.recipes.desactivate
-    oozie.recipes.desactivate
-    hue.recipes.desactivate
-    #thrift.recipes.desactivate
+    #shell/routes/confirm 'Remove all the components and data''
+    require './zookeeper/recipes/desactivate'
+    require './hadoop/recipes/desactivate'
+    require './hbase/recipes/desactivate'
+    require './hive/recipes/desactivate'
+    require './pig/recipes/desactivate'
+    require './oozie/recipes/desactivate'
+    require './hue/recipes/desactivate'
+    require './thrift/recipes/desactivate'
     shell.routes.prompt 'Hadoop has been desactivated'
   ]
   app.cmd 'configure', 'Configure all the Hadoop components', [
-    zookeeper.recipes.configure
-    hadoop.recipes.configure
-    hbase.recipes.configure
-    hive.recipes.configure
-    pig.recipes.configure
-    oozie.recipes.configure
-    hue.recipes.configure
-    #routes.sqoop.configure
+    require './zookeeper/recipes/configure'
+    require './hadoop/recipes/configure'
+    require './hbase/recipes/configure'
+    require './hive/recipes/configure'
+    require './pig/recipes/configure'
+    require './oozie/recipes/configure'
+    require './hue/recipes/configure'
+    #require './sqoop/configure'
     shell.routes.prompt
   ]
   app.cmd 'restart', 'Restart all Hadoop components', [
-    zookeeper.recipes.stop
-    hadoop.recipes.stop
-    hbase.recipes.stop
-    hive.recipes.stop
-    hue.recipes.stop
-    zookeeper.recipes.start
-    hadoop.recipes.start
-    hbase.recipes.start
-    hive.recipes.start
-    hue.recipes.start
-  ], shell.routes.prompt
+    require './zookeeper/recipes/stop'
+    require './hadoop/recipes/stop'
+    require './hbase/recipes/stop'
+    require './hive/recipes/stop'
+    require './hue/recipes/stop'
+    require './zookeeper/recipes/start'
+    require './hadoop/recipes/start'
+    require './hbase/recipes/start'
+    require './hive/recipes/start'
+    require './hue/recipes/start'
+    shell.routes.prompt
+  ]
   app.cmd 'start', 'Start all Hadoop components', [
-    zookeeper.recipes.start
-    hadoop.recipes.start
-    hbase.recipes.start
-    hive.recipes.start
-    hue.recipes.start
-  ], shell.routes.prompt
+    require './zookeeper/recipes/start'
+    require './hadoop/recipes/start'
+    require './hbase/recipes/start'
+    require './hive/recipes/start'
+    require './hue/recipes/start'
+    shell.routes.prompt
+  ]
   app.cmd 'stop', 'Stop all Hadoop components', [
-    hue.recipes.stop
-    hive.recipes.stop
-    hbase.recipes.stop
-    hadoop.recipes.stop
-    zookeeper.recipes.stop
+    require './hue/recipes/stop'
+    require './hive/recipes/stop'
+    require './hbase/recipes/stop'
+    require './hadoop/recipes/stop'
+    require './zookeeper/recipes/stop'
     shell.routes.prompt
   ]
   # Enrich with user defined configuration

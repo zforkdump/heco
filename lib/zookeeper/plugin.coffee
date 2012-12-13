@@ -35,7 +35,7 @@ module.exports = hadoop = (req, res, next) ->
     shell.routes.prompt 'ZooKeeper stoped'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
+  mecano.merge true, c, require './conf'
   c.zookeeper.prefix = "#{c.core.lib}/#{path.basename c.zookeeper.source, '.tar.gz'}"
   c.zookeeper.bin = "#{c.zookeeper.prefix}/bin"
   c.zookeeper.conf = "#{c.zookeeper.prefix}/conf"

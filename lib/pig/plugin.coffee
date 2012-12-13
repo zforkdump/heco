@@ -18,7 +18,7 @@ module.exports = hadoop = (req, res, next) ->
     shell.routes.prompt 'Pig installed'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
+  mecano.merge true, c, require './conf'
   c.pig.prefix = "#{c.core.lib}/#{path.basename c.pig.source, '.tar.gz'}"
   c.pig.bin = "#{c.pig.prefix}/bin"
   next()

@@ -39,7 +39,7 @@ module.exports = (req, res, next) ->
     shell.routes.prompt 'HBase Rest server stoped'
   ]
   c = req.hmgr.config
-  mecano.merge true, c, require './conf/default'
+  mecano.merge true, c, require './conf'
   c.hbase.prefix = "#{c.core.lib}/#{path.basename c.hbase.source, '.tar.gz'}"
   c.hbase.bin = "#{c.hbase.prefix}/bin"
   c.hbase.conf = "#{c.hbase.prefix}/conf"

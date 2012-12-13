@@ -4,6 +4,7 @@ cpus_num = os.cpus().length
 
 module.exports = hadoop:
   version: '0.20.2-cdh3u3'
+  source: 'http://archive.cloudera.com/cdh4/cdh/4/hadoop-2.0.0-cdh4.1.2.tar.gz'
   hdfs_user: process.env.USER
   mapred_user: process.env.USER
   attributes:

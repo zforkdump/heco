@@ -2,8 +2,8 @@
 mecano = require 'mecano'
 recipe = require '../../recipe'
 
-module.exports = 
-  bin: recipe.wrap( 'HBase # Activation # Bin', (c, next) ->
+module.exports =
+  'HBase # Activation # Bin': (c, next) ->
     files = [
       'graceful_stop.sh', 'hbase', 'hbase-config.sh', 'hbase-daemon.sh', 
       'hbase-daemons.sh', 'local-master-backup.sh', 
@@ -18,18 +18,15 @@ module.exports =
         chmod: 0o0755
     mecano.link links, (err, created) ->
       next err, if created then recipe.OK else recipe.SKIPPED
-  )
-  conf: recipe.wrap( 'HBase # Activation # Conf', (c, next) ->
+  'HBase # Activation # Conf': (c, next) ->
     mecano.link
       source: c.conf.hbase.conf
       destination: "#{c.conf.core.etc}/hbase"
     , (err, created) ->
       next err, if created then recipe.OK else recipe.SKIPPED
-  )
-  # log: recipe.wrap( 'HBase # Activation # Log', (c, next) ->
+  # 'HBase # Activation # Log': (c, next) ->
   #   mecano.link
   #     source: c.conf.hbase.log
   #     destination: "#{c.conf.core.log}/hbase"
   #   , (err, created) ->
   #     next err, if created then recipe.OK else recipe.SKIPPED
-  # )

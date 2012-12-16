@@ -5,7 +5,7 @@ mecano = require 'mecano'
 recipe = require '../../recipe'
 
 module.exports = 
-  bin: recipe.wrap( 'Pig # Activation # Bin', (c, next) ->
+  'Pig # Activation # Bin': (c, next) ->
     glob "#{c.conf.pig.bin}/*", (err, files) ->
       return next err if err
       files = for file in files
@@ -14,4 +14,3 @@ module.exports =
         { source: file, destination: destination, exec: true }
       mecano.link files, (err, created) ->
         next err, if created then recipe.OK else recipe.SKIPPED
-  )

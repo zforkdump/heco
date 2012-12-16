@@ -5,7 +5,7 @@ mecano = require 'mecano'
 recipe = require '../../recipe'
 
 module.exports = 
-  attributes: recipe.wrap( 'ZooKeeper # Configuration # Attributes: ', (c, next) ->
+  'ZooKeeper # Configuration # Attributes: ': (c, next) ->
     attrs = c.conf.zookeeper.attributes
     attrs['zookeeper.exec.scratchdir'] = path.resolve c.conf.core.tmp, attrs['zookeeper.exec.scratchdir']
     attrs['zookeeper.log.dir'] = path.resolve c.conf.core.log, attrs['zookeeper.log.dir']
@@ -21,8 +21,7 @@ module.exports =
       }
     mecano.render files, (err, rendered) ->
       next err, if rendered then recipe.OK else recipe.SKIPPED
-  )
-  logs: recipe.wrap( 'ZooKeeper # Configuration # Logs: ', (c, next) ->
+  'ZooKeeper # Configuration # Logs: ': (c, next) ->
     # ZooKeeper doesn't seem to care about `zookeeper.log.dir` in log4j.properties
     # see start recipe
     fs.readFile "#{c.conf.zookeeper.conf}/log4j.properties", 'ascii', (err, content) ->
@@ -31,4 +30,3 @@ module.exports =
       , (err, created) ->
         return next err if err
         next err, if created then recipe.OK else recipe.SKIPPED
-  )

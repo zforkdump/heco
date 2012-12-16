@@ -5,8 +5,8 @@ path = require 'path'
 mecano = require 'mecano'
 recipe = require '../../recipe'
 
-module.exports = 
-  attributes: recipe.wrap( 'HBase # Configuration # Attributes', (c, next) ->
+module.exports =
+  'HBase # Configuration # Attributes': (c, next) ->
     attrs = c.conf.hbase.attributes
     attrs['hbase.rootdir'] = "#{c.conf.hadoop.attributes['fs.default.name']}/#{attrs['hbase.rootdir']}"
     attrs['hbase.log.dir'] = path.resolve c.conf.core.log, attrs['hbase.log.dir']
@@ -18,14 +18,12 @@ module.exports =
         context: attrs
     mecano.render files, (err, rendered) ->
       next err, if rendered then recipe.OK else recipe.SKIPPED
-  )
-  dirs: recipe.wrap( 'HBase # Configuration # Directories', (c, next) ->
+  'HBase # Configuration # Directories': (c, next) ->
     mecano.mkdir
       directory: c.conf.hbase.attributes['hbase.log.dir']
     , (err, created) ->
       next err, if created then recipe.OK else recipe.SKIPPED
-  )
-  system: recipe.wrap( 'HBase # Configuration # System', (c, next) ->
+  'HBase # Configuration # System': (c, next) ->
     next null, recipe.TODO
     ###
     1.  In the /etc/security/limits.conf file, add the following lines: 
@@ -36,4 +34,3 @@ module.exports =
       add the following line in the /etc/pam.d/common-session file: 
       session required  pam_limits.so
     ###
-  )

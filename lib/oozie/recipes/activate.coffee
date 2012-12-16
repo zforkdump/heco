@@ -4,8 +4,8 @@ glob = require 'glob'
 mecano = require 'mecano'
 recipe = require '../../recipe'
 
-module.exports = 
-  bin: recipe.wrap( 'Oozie # Activation # Bin', (c, next) ->
+module.exports =
+  'Oozie # Activation # Bin': (c, next) ->
     glob "#{c.conf.oozie.bin}/*", (err, files) ->
       if err then res.red('FAILED').ln() && next err
       files = for file in files
@@ -14,4 +14,3 @@ module.exports =
         { source: file, destination: destination, exec: true }
       mecano.link files, (err, created) ->
         next err, if created then recipe.OK else recipe.SKIPPED
-  )

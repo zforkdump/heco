@@ -5,7 +5,7 @@ mecano = require 'mecano'
 recipe = require '../../recipe'
 
 module.exports = 
-  bin: recipe.wrap( 'Flume # Activation # Bin', (c, next) ->
+  'Flume # Activation # Bin': (c, next) ->
     files = for file in ['flume', 'flume-daemon.sh']
       basename = path.basename file
       option = 
@@ -14,4 +14,3 @@ module.exports =
         exec: true
     mecano.link files, (err, created) ->
       next err, if created then recipe.OK else recipe.SKIPPED
-  )

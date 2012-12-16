@@ -2,19 +2,19 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-recipes = require './recipes'
+recipe = require '../recipe'
 
-module.exports = hadoop = (req, res, next) ->
+module.exports = (req, res, next) ->
   req.shell.cmd 'pig activate', 'Activate Pig', [
-    recipes.activate
+    recipe "#{__dirname}/recipes/activate"
     shell.routes.prompt 'Pig activated'
   ]
   req.shell.cmd 'pig desactivate', 'Desactivate Pig', [
-    recipes.desactivate
+    recipe "#{__dirname}/recipes/desactivate"
     shell.routes.prompt 'Pig desactivated'
   ]
   req.shell.cmd 'pig install', 'Desactivate Pig', [
-    recipes.install
+    recipe "#{__dirname}/recipes/install"
     shell.routes.prompt 'Pig installed'
   ]
   c = req.hmgr.config

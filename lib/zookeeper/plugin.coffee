@@ -2,36 +2,36 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-recipes = require './recipes'
+recipe = require '../recipe'
 
-module.exports = hadoop = (req, res, next) ->
+module.exports = (req, res, next) ->
   req.shell.cmd 'zookeeper activate', 'Activate ZooKeeper', [
-    recipes.activate
+    recipe "#{__dirname}/recipes/activate"
     shell.routes.prompt 'ZooKeeper activated'
   ]
   req.shell.cmd 'zookeeper desactivate', 'Desactivate ZooKeeper', [
-    recipes.desactivate
+    recipe "#{__dirname}/recipes/desactivate"
     shell.routes.prompt 'ZooKeeper desactivated'
   ]
   req.shell.cmd 'zookeeper configure', 'Configure ZooKeeper', [
-    recipes.configure
+    recipe "#{__dirname}/recipes/configure"
     shell.routes.prompt 'ZooKeeper configured'
   ]
   req.shell.cmd 'zookeeper install', 'Install ZooKeeper', [
-    recipes.install
+    recipe "#{__dirname}/recipes/install"
     shell.routes.prompt 'ZooKeeper installed'
   ]
   req.shell.cmd 'zookeeper restart', 'Retart ZooKeeper', [
-    recipes.stop
-    recipes.start
+    recipe "#{__dirname}/recipes/stop"
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'ZooKeeper restarted'
   ]
   req.shell.cmd 'zookeeper start', 'Start ZooKeeper', [
-    recipes.start
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'ZooKeeper started'
   ]
   req.shell.cmd 'zookeeper stop', 'Stop ZooKeeper', [
-    recipes.stop
+    recipe "#{__dirname}/recipes/stop"
     shell.routes.prompt 'ZooKeeper stoped'
   ]
   c = req.hmgr.config

@@ -4,32 +4,29 @@ fs = require 'fs'
 mecano = require 'mecano'
 recipe = require '../../recipe'
 
-module.exports =
-  download: recipe.wrap( 'Hive # Install # Download', (c, next) ->
+module.exports = 
+  'Hive # Install # Download': (c, next) ->
     mecano.download
       source: c.conf.hive.source
       destination: "#{c.conf.core.tmp}/#{path.basename c.conf.hive.source}"
       force: false
     , (err, downloaded) ->
       next err, if downloaded then recipe.OK else recipe.SKIPPED
-  )
-  download_driver: recipe.wrap( 'Hive # Install # Download MySQL driver', (c, next) ->
+  'Hive # Install # Download MySQL driver': (c, next) ->
     name = /\/([\w\d-\.]+.tar.gz)/.exec(c.conf.hive.attributes.database_driver_url)[1]
     mecano.download
       source: c.conf.hive.attributes.database_driver_url
       destination: "#{c.conf.core.tmp}/#{name}"
     , (err, downloaded) ->
       next err, if downloaded then recipe.OK else recipe.SKIPPED
-  )
-  extract: recipe.wrap( 'Hive # Install # Extract', (c, next) ->
+  'Hive # Install # Extract': (c, next) ->
     mecano.extract
       source: "#{c.conf.core.tmp}/#{path.basename c.conf.hive.source}"
       destination: c.conf.core.lib
       not_if_exists: "#{c.conf.core.lib}/#{path.basename c.conf.hive.source, '.tar.gz'}"
     , (err, extracted) ->
       next err, if extracted then recipe.OK else recipe.SKIPPED
-  )
-  extract_driver: recipe.wrap( 'Hive # Install # Extract MySQL driver', (c, next) ->
+  'Hive # Install # Extract MySQL driver': (c, next) ->
     name = /\/([\w\d-\.]+.tar.gz)/.exec(c.conf.hive.attributes.database_driver_url)[1]
     mecano.extract
       source: "#{c.conf.core.tmp}/#{name}"
@@ -42,4 +39,3 @@ module.exports =
         mecano.rm "#{c.conf.core.tmp}/#{path.basename name, '.tar.gz'}", (err, removed) ->
           err = new Error 'Failed to clear archive' if not err and not removed
           next err, recipe.OK
-  )

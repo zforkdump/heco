@@ -2,8 +2,8 @@
 mecano = require 'mecano'
 recipe = require '../../recipe'
 
-start = (name, args) ->
-  recipe.wrap "Hadoop # Start # #{name}", (c, next) ->
+start = (args) ->
+  (c, next) ->
     mecano.exec
       cmd: "./hadoop-daemon.sh #{args}"
       cwd: c.conf.core.bin
@@ -17,8 +17,8 @@ start = (name, args) ->
       next err, code
 
 module.exports =
-  namenode: start 'Namenode', 'start namenode'
-  datanode: start 'Datanode', 'start datanode'
-  secondarynamenode: start 'Secondary Namenode', '--hosts masters start secondarynamenode'
-  jobtracker: start 'Jobtracker', 'start jobtracker'
-  tasktracker: start 'Tasktracker', 'start tasktracker'
+  'Hadoop # Start # Namenode': start 'start namenode'
+  'Hadoop # Start # Datanode': start 'start datanode'
+  'Hadoop # Start # Secondary Namenode': start '--hosts masters start secondarynamenode'
+  'Hadoop # Start # Jobtracker': start 'start jobtracker'
+  'Hadoop # Start # Tasktracker': start 'start tasktracker'

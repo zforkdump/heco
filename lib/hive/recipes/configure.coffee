@@ -8,13 +8,12 @@ recipe = require '../../recipe'
 properties = require '../../hadoop/lib/properties'
 
 module.exports = 
-  check: recipe.wrap( 'Hive # Configuration # Check', (c, next) ->
+  'Hive # Configuration # Check': (c, next) ->
     # Make sure hadoop build is not present other hive throw JDOFatalInternalException
     path.exists "#{c.conf.hadoop.prefix}/build", (exists) ->
       err = new Error 'Hadoop build directory shall disappear' if exists
       next err, recipe.OK
-  )
-  attributes: recipe.wrap( 'Hive # Configuration # Attributes', (c, next) ->
+  'Hive # Configuration # Attributes': (c, next) ->
     attrs = c.conf.hive.attributes
     attrs['hive.exec.scratchdir'] = path.resolve c.conf.core.tmp, attrs['hive.exec.scratchdir']
     attrs['hive.log.direxec'] = path.resolve c.conf.core.log, attrs['hive.log.direxec']
@@ -59,15 +58,13 @@ module.exports =
         content = content.replace /mine/, ''
         fs.writeFile fixpwpath, content, (err) ->
           next err, if rendered then recipe.OK else recipe.SKIPPED
-  )
-  dirs: recipe.wrap( 'Hive # Configuration # Directories', (c, next) ->
+  'Hive # Configuration # Directories': (c, next) ->
     mecano.mkdir
       directory: path.dirname c.conf.hive.pid
       chmod: 0o0755
     , (err, created) ->
       next err, if created then recipe.OK else recipe.SKIPPED
-  )
-  database: recipe.wrap( 'Hive # Configure # Database', (c, next) ->
+  'Hive # Configure # Database': (c, next) ->
     # Hive will complain on schema creation if encoding isnt latin1
     # because it try to insert some very large keys
     # such a good dump java citizen
@@ -113,8 +110,7 @@ module.exports =
         else code = recipe.SKIPPED
         next err, code
     connect()
-  )
-  hdfs: recipe.wrap( 'Hive # Configure # HDFS', (c, next) ->
+  'Hive # Configure # HDFS': (c, next) ->
     return next null, recipe.TODO
     # Extract namenode hostname and port
     properties.read "#{c.conf.hadoop.conf}/core-site.xml", 'fs.default.name', (err, value) ->
@@ -129,5 +125,3 @@ module.exports =
           return res.red('FAILED').ln() and next err if err and err.code isnt 1
           exec "#{c.conf.hadoop.bin}/hadoop fs -mkdir #{hive.metastore.warehouse.dir}", (err) ->
             next err, recipe.OK
-  )
-    

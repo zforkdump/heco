@@ -2,36 +2,36 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-recipes = require './recipes'
+recipe = require '../recipe'
 
 module.exports = (req, res, next) ->
   req.shell.cmd 'hue activate', 'Activate Hue', [
-    recipes.activate
+    recipe "#{__dirname}/recipes/activate"
     shell.routes.prompt 'Hue activated'
   ]
   req.shell.cmd 'hue desactivate', 'Desactivate Hue', [
-    recipes.desactivate
+    recipe "#{__dirname}/recipes/desactivate"
     shell.routes.prompt 'Hue desactivated'
   ]
   req.shell.cmd 'hue configure', 'Configure Hue', [
-    recipes.configure
+    recipe "#{__dirname}/recipes/configure"
     shell.routes.prompt 'Hue configurated'
   ]
   req.shell.cmd 'hue install', 'Install Hue', [
-    recipes.install
+    recipe "#{__dirname}/recipes/install"
     shell.routes.prompt 'Hue installed'
   ]
   req.shell.cmd 'hue restart', 'Restart Hue', [
-    recipes.stop
-    recipes.start
+    recipe "#{__dirname}/recipes/stop"
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'Hue restarted'
   ]
   req.shell.cmd 'hue start', 'Start Hue', [
-    recipes.start
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'Hue started'
   ]
   req.shell.cmd 'hue stop', 'Stop Hue', [
-    recipes.stop
+    recipe "#{__dirname}/recipes/stop"
     shell.routes.prompt 'Hue stoped'
   ]
   c = req.hmgr.config

@@ -2,19 +2,19 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-recipes = require './recipes'
+recipe = require '../recipe'
 
 module.exports = hadoop = (req, res, next) ->
   req.shell.cmd 'thrift activate', 'Activate Thrift', [
-    recipes.activate
+    recipe "#{__dirname}/recipes/activate"
     shell.routes.prompt 'Thrift activated'
   ]
   req.shell.cmd 'thrift desactivate', 'Desactivate Thrift', [
-    recipes.desactivate
+    recipe "#{__dirname}/recipes/desactivate"
     shell.routes.prompt 'Thrift desactivated'
   ]
   req.shell.cmd 'thrift install', 'Desactivate Thrift', [
-    recipes.install
+    recipe "#{__dirname}/recipes/install"
     shell.routes.prompt 'Thrift installed'
   ]
   c = req.hmgr.config

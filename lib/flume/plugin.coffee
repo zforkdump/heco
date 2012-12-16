@@ -2,23 +2,23 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-recipes = require './recipes'
+recipe = require '../recipe'
 
 module.exports = (req, res, next) ->
   req.shell.cmd 'flume activate', 'Activate Flume', [
-    recipes.activate
+    recipe "#{__dirname}/recipes/activate"
     shell.routes.prompt 'Flume activated'
   ]
   req.shell.cmd 'flume desactivate', 'Desactivate Flume', [
-    recipes.desactivate
+    recipe "#{__dirname}/recipes/desactivate"
     shell.routes.prompt 'Flume desactivated'
   ]
   req.shell.cmd 'flume configure', 'Configure Flume', [
-    recipes.install
-    shell.routes.prompt 'Flume installed'
+    recipe "#{__dirname}/recipes/configure"
+    shell.routes.prompt 'Flume configured'
   ]
   req.shell.cmd 'flume install', 'Desactivate Flume', [
-    recipes.install
+    recipe "#{__dirname}/recipes/install"
     shell.routes.prompt 'Flume installed'
   ]
   c = req.hmgr.config

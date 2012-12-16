@@ -6,8 +6,8 @@ mecano = require 'mecano'
 mysql = require 'mysql'
 recipe = require '../../recipe'
 
-module.exports = 
-  attributes: recipe.wrap( 'Hue # Configuration # Attributes', (c, next) ->
+module.exports =
+  'Hue # Configuration # Attributes': (c, next) ->
     attrs = c.conf.hue.attributes
     attrs['hadoop.hadoop_home'] = c.conf.hadoop.prefix
     attrs['hadoop.hdfs_clusters.hdfs_port'] = c.conf.hadoop.attributes['fs.default.name'].split(':')[2]
@@ -26,15 +26,13 @@ module.exports =
       context: attrs
     ], (err, updated) ->
       next err, if updated then recipe.OK else recipe.SKIPPED
-  )
-  dirs: recipe.wrap( 'Hue # Configuration # Directories', (c, next) ->
+  'Hue # Configuration # Directories': (c, next) ->
     mecano.mkdir [
       directory: c.conf.hue.pid
       chmod: 0o0755
     ], (err, created) ->
       next err, if created then recipe.OK else recipe.SKIPPED
-  )
-  database: recipe.wrap( 'Hue # Configure # Database', (c, next) ->
+  'Hue # Configure # Database': (c, next) ->
     attrs = c.conf.hue.attributes
     connection_end = (callback) ->
       connection.end (err) ->
@@ -51,15 +49,13 @@ module.exports =
       connection.query 'CREATE DATABASE `hue`;', (err, result) ->
         connection_end ->
           next err, recipe.OK
-  )
   # TODO: Build only if configuration has changed to reflect changes in database settings
   # Among the created file: './app.reg'
-  build: recipe.wrap( 'Hue # Configure # Build', (c, next) ->
+  'Hue # Configure # Build': (c, next) ->
     mecano.exec
       cmd: 'export CC=gcc && make apps'
       cwd: c.conf.hue.prefix
       not_if_exists: "#{c.conf.hue.prefix}/app.reg"
     , (err, executed, stdout, stderr) ->
       next err, if executed then recipe.OK else recipe.SKIPPED
-  )
-        
+   

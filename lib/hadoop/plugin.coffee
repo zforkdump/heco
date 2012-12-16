@@ -2,36 +2,36 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-recipes = require './recipes'
+recipe = require '../recipe'
 
-module.exports = hadoop = (req, res, next) ->
+module.exports = (req, res, next) ->
   req.shell.cmd 'hadoop install', 'Install Hadoop', [
-    recipes.install
+    recipe "#{__dirname}/recipes/install"
     shell.routes.prompt 'Hadoop installed'
   ]
   req.shell.cmd 'hadoop activate', 'Activate Hadoop', [
-    recipes.activate
+    recipe "#{__dirname}/recipes/activate"
     shell.routes.prompt 'Hadoop started'
   ]
   req.shell.cmd 'hadoop desactivate', 'Desactivate Hadoop', [
-    recipes.desactivate
+    recipe "#{__dirname}/recipes/desactivate"
     shell.routes.prompt 'Hadoop desactivated'
   ]
   req.shell.cmd 'hadoop configure', 'Configure Hadoop', [
-    recipes.configure
+    recipe "#{__dirname}/recipes/configure"
     shell.routes.prompt 'Hadoop configured'
   ]
   req.shell.cmd 'hadoop restart', 'Restart Hadoop', [
-    recipes.stop
-    recipes.start
+    recipe "#{__dirname}/recipes/stop"
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'Hadoop restarted'
   ]
   req.shell.cmd 'hadoop start', 'Start Hadoop', [
-    recipes.start
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'Hadoop started'
   ]
   req.shell.cmd 'hadoop stop', 'Stop Hadoop', [
-    recipes.stop
+    recipe "#{__dirname}/recipes/stop"
     shell.routes.prompt 'Hadoop stoped'
   ]
   c = req.hmgr.config

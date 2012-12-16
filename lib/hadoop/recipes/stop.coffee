@@ -3,8 +3,8 @@
 mecano = require 'mecano'
 recipe = require '../../recipe'
 
-stop = (name, args) ->
-  recipe.wrap "Hadoop # Stop # #{name}", (c, next) ->
+stop = (args) ->
+  (c, next) ->
     mecano.exec
       cmd: "./hadoop-daemon.sh #{args}"
       cwd: c.conf.core.bin
@@ -15,10 +15,9 @@ stop = (name, args) ->
         code = recipe.SKIPPED
       next err, code
 
-module.exports =
-  namenode: stop 'Namenode', 'stop namenode'
-  datanode: stop 'Datanode', 'stop datanode'
-  secondarynamenode: stop 'Secondary Namenode', '--hosts masters stop secondarynamenode'
-  jobtracker: stop 'Jobtracker', 'stop jobtracker'
-  tasktracker: stop 'Tasktracker', 'stop tasktracker'
-      
+module.exports = 
+  'Hadoop # Stop # Tasktracker': stop 'stop tasktracker'
+  'Hadoop # Stop # Jobtracker': stop 'stop jobtracker'
+  'Hadoop # Stop # Secondary Namenode': stop '--hosts masters stop secondarynamenode'
+  'Hadoop # Stop # Datanode': stop 'stop datanode'
+  'Hadoop # Stop # Namenode': stop 'stop namenode'

@@ -4,11 +4,11 @@ fs = require 'fs'
 exec = require('child_process').exec
 glob = require 'glob'
 mecano = require 'mecano'
-properties = require '../lib/properties'
 recipe = require '../../recipe'
+properties = require '../lib/properties'
 
 module.exports = 
-  bin: recipe.wrap( 'Hadoop # Activation # Bin', (c, next) ->
+  'Hadoop # Activation # Bin': (c, next) ->
     glob "#{c.conf.hadoop.bin}/*", (err, files) ->
       files = for file in files
         options = 
@@ -17,23 +17,20 @@ module.exports =
           exec: true
       mecano.link files, (err, linked) ->
         next err, if linked then recipe.OK else recipe.SKIPPED
-  )
-  conf: recipe.wrap( 'Hadoop # Activation # Conf', (c, next) ->
+  'Hadoop # Activation # Conf': (c, next) ->
     mecano.link
       source: c.conf.hadoop.conf
       destination: "#{c.conf.core.etc}/hadoop"
     , (err, created) ->
       next err, if created then 'OK' else 'SKIPPED'
-  )
-  log: recipe.wrap( 'Hadoop # Activation # Log', (c, next) ->
+  'Hadoop # Activation # Log': (c, next) ->
     mecano.mkdir c.conf.hadoop.logs, (err, created) ->
       mecano.link
         source: c.conf.hadoop.logs
         destination: "#{c.conf.core.log}/hadoop"
       , (err, created) ->
         next err, if created then recipe.OK else recipe.SKIPPED
-  )
-  format: recipe.wrap( 'Hadoop # Activation # Format Namenode', (c, next) ->
+  'Hadoop # Activation # Format Namenode': (c, next) ->
     properties.read "#{c.conf.hadoop.conf}/hdfs-site.xml", 'dfs.name.dir', (err, dfs_name_dir) ->
       return next err if err
       # -i      The -i (simulate initial login) option runs the shell specified in the passwd(5) entry of the target user as a login shell.
@@ -50,4 +47,3 @@ module.exports =
         not_if_exists: dfs_name_dir
       , (err, executed, stdout, stderr) ->
         next err, if executed then recipe.OK else recipe.SKIPPED
-  )

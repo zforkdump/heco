@@ -4,8 +4,8 @@ mecano = require 'mecano'
 recipe = require '../../recipe'
 properties = require '../lib/properties'
 
-module.exports =
-  attributes: recipe.wrap( 'Hadoop # Configuration # Attributes', (c, next) ->
+module.exports = 
+  'Hadoop # Configuration # Attributes': (c, next) ->
     attrs = c.conf.hadoop.attributes
     # todo: use path.resolve, eg:
     # path.resolve c.conf.core.log, attrs['hbase.log.dir']
@@ -22,8 +22,7 @@ module.exports =
         context: attrs
     mecano.render files, (err, rendered) ->
       next err, if rendered then recipe.OK else recipe.SKIPPED
-  )
-  directories: recipe.wrap( 'Hadoop # Configuration # Directories', (c, next) ->
+  'Hadoop # Configuration # Directories': (c, next) ->
     file = "#{c.conf.hadoop.conf}/core-site.xml"
     properties.read file, 'hadoop.tmp.dir', (err, value) ->
       mecano.mkdir
@@ -31,5 +30,3 @@ module.exports =
         exclude: /\${/
       , (err, created) ->
         next err, if created then recipe.OK else recipe.SKIPPED
-  )
-    

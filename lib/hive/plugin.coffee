@@ -2,36 +2,36 @@
 path = require 'path'
 shell = require 'shell'
 mecano = require 'mecano'
-recipes = require './recipes'
+recipe = require '../recipe'
 
 module.exports = (req, res, next) ->
   req.shell.cmd 'hive activate', 'Activate Hive', [
-    recipes.activate
+    recipe "#{__dirname}/recipes/activate"
     shell.routes.prompt 'Hive activated'
   ]
   req.shell.cmd 'hive desactivate', 'Desactivate Hive', [
-    recipes.desactivate
+    recipe "#{__dirname}/recipes/desactivate"
     shell.routes.prompt 'Hive desactivated'
   ]
   req.shell.cmd 'hive configure', 'Configure Hive', [
-    recipes.configure
+    recipe "#{__dirname}/recipes/configure"
     shell.routes.prompt 'Hive configured'
   ]
   req.shell.cmd 'hive install', 'Install Hive', [
-    recipes.install
+    recipe "#{__dirname}/recipes/install"
     shell.routes.prompt 'Hive installed'
   ]
   req.shell.cmd 'hive start', 'Start Hive', [
-    recipes.start
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'Hive started'
   ]
   req.shell.cmd 'hive stop', 'Stop Hive', [
-    recipes.stop
+    recipe "#{__dirname}/recipes/stop"
     shell.routes.prompt 'Hive stoped'
   ]
   req.shell.cmd 'hive restart', 'Restart Hive', [
-    recipes.stop
-    recipes.start
+    recipe "#{__dirname}/recipes/stop"
+    recipe "#{__dirname}/recipes/start"
     shell.routes.prompt 'Hive restarted'
   ]
   c = req.hmgr.config
